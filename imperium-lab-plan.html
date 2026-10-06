@@ -1,0 +1,1782 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Imperium Lab · Plan de arranque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=JetBrains+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: encabezado con avance, pestañas de trabajo (Hoy, Tablero, Cronograma, Fases, Marca, Ajustes) y panel lateral de detalle.
+   Paleta del manual Imperial Tech / Imperium Lab con regla 60-30-10: neutros violáceos, violeta de marca, degradado solo en acentos, naranja solo para acción. */
+:root{
+  --bg:#F6F5FB; --surface:#FFFFFF; --surface-2:#EFEDF8; --surface-3:#E6E3F3;
+  --ink:#14121F; --ink-2:#4E4A63; --ink-3:#6B6782; --line:#E2DFEE;
+  --brand:#6A4BF0; --brand-ink:#FFFFFF; --brand-tint:#EEEAFF; --brand-text:#5B3FDB;
+  --cta:#FF6B35; --cta-ink:#0D0D12;
+  --mj:#1A6DBA; --mj-tint:#E2EFFB; --jq:#B8329F; --jq-tint:#FBE6F7;
+  --good:#0F7A55; --good-tint:#E1F4EB; --warn:#9A5800; --warn-tint:#FFF0D6; --crit:#B42318; --crit-tint:#FDE6E3;
+  --grad:linear-gradient(90deg,#7B5CFF 0%,#3B9EFF 38%,#2DD4BF 68%,#E85CD8 100%);
+  --shadow:0 1px 2px rgba(20,18,31,.06),0 8px 24px -12px rgba(20,18,31,.18);
+  --f-display:"Sora",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-body:"DM Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --r:10px; --r-sm:7px;
+  color-scheme:light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0D0D12; --surface:#16161E; --surface-2:#1E1E29; --surface-3:#272635;
+    --ink:#EDECF5; --ink-2:#B3AFC8; --ink-3:#938FAB; --line:#2B2A3A;
+    --brand:#9D86FF; --brand-ink:#0D0D12; --brand-tint:#221C44; --brand-text:#B4A3FF;
+    --cta:#FF6B35; --cta-ink:#0D0D12;
+    --mj:#7AB8FF; --mj-tint:#12243A; --jq:#F28AE6; --jq-tint:#371634;
+    --good:#4ADE9B; --good-tint:#0E2A1E; --warn:#F5B454; --warn-tint:#33240B; --crit:#FF8A80; --crit-tint:#3A1614;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0D0D12; --surface:#16161E; --surface-2:#1E1E29; --surface-3:#272635;
+  --ink:#EDECF5; --ink-2:#B3AFC8; --ink-3:#938FAB; --line:#2B2A3A;
+  --brand:#9D86FF; --brand-ink:#0D0D12; --brand-tint:#221C44; --brand-text:#B4A3FF;
+  --cta:#FF6B35; --cta-ink:#0D0D12;
+  --mj:#7AB8FF; --mj-tint:#12243A; --jq:#F28AE6; --jq-tint:#371634;
+  --good:#4ADE9B; --good-tint:#0E2A1E; --warn:#F5B454; --warn-tint:#33240B; --crit:#FF8A80; --crit-tint:#3A1614;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 10px 28px -14px rgba(0,0,0,.7);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 var(--f-body);padding-bottom:env(safe-area-inset-bottom,0px)}
+button,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand-text)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.01em}
+.mono{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.wrap{max-width:1240px;margin:0 auto;padding-inline:20px}
+@media (max-width:520px){.wrap{padding-inline:16px}}
+
+/* Header */
+.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:20}
+.top-in{display:flex;align-items:center;gap:16px;padding-block:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;min-width:0;flex:1 1 260px}
+.mark{width:34px;height:34px;border-radius:9px;background:var(--grad);flex:none}
+.brand h1{font-size:19px;font-weight:800;line-height:1.15}
+.brand p{margin:0;color:var(--ink-3);font-size:13px}
+.top-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.saved{font-size:12.5px;color:var(--ink-3)}
+.saved.err{color:var(--crit);font-weight:600}
+.rule{height:3px;background:var(--grad)}
+.tabs{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;padding-block:8px}
+.tabs::-webkit-scrollbar{display:none}
+.tab{border:0;background:none;padding:8px 14px;border-radius:999px;font-weight:600;color:var(--ink-2);cursor:pointer;white-space:nowrap;font-size:14px}
+.tab:hover{background:var(--surface-2)}
+.tab[aria-selected="true"]{background:var(--brand);color:var(--brand-ink)}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);padding:7px 12px;border-radius:var(--r-sm);font-weight:600;font-size:13.5px;cursor:pointer;text-decoration:none;color:var(--ink)}
+.btn:hover{border-color:var(--ink-3)}
+.btn.primary{background:var(--brand);border-color:var(--brand);color:var(--brand-ink)}
+.btn.cta{background:var(--cta);border-color:var(--cta);color:var(--cta-ink)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.sm{padding:4px 9px;font-size:12.5px}
+.btn.danger{color:var(--crit);border-color:var(--crit)}
+.iconbtn{width:36px;height:36px;justify-content:center;padding:0}
+
+/* Summary */
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;padding-block:18px 6px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px;min-width:0}
+.stat .lbl{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);font-weight:600}
+.stat .val{font-family:var(--f-display);font-size:26px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.stat .sub{font-size:13px;color:var(--ink-2)}
+.bar{height:6px;background:var(--surface-3);border-radius:99px;overflow:hidden;margin-top:8px}
+.bar>i{display:block;height:100%;background:var(--grad);border-radius:99px}
+.bar.mj>i{background:var(--mj)} .bar.jq>i{background:var(--jq)}
+.people{display:grid;gap:8px;margin-top:6px}
+.prow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;font-size:13px}
+.prow .bar{margin-top:0}
+
+/* Toolbar */
+.toolbar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding-block:14px}
+.toolbar h2{font-size:20px;font-weight:700;margin-right:auto}
+.seg{display:inline-flex;background:var(--surface-2);border-radius:999px;padding:3px;gap:2px}
+.seg button{border:0;background:none;padding:5px 12px;border-radius:999px;font-weight:600;font-size:13px;cursor:pointer;color:var(--ink-2)}
+.seg button[aria-pressed="true"]{background:var(--surface);color:var(--ink);box-shadow:var(--shadow)}
+main{padding-bottom:60px}
+.note{background:var(--brand-tint);color:var(--ink);border-radius:var(--r);padding:12px 14px;font-size:14px}
+.note.warn{background:var(--warn-tint)}
+.muted{color:var(--ink-3)}
+
+/* Chips & pills */
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.chip.MJ{background:var(--mj-tint);color:var(--mj)} .chip.JQ{background:var(--jq-tint);color:var(--jq)} .chip.AMBAS{background:var(--brand-tint);color:var(--brand-text)}
+.dot{width:8px;height:8px;border-radius:50%;display:inline-block;flex:none}
+.dot.MJ{background:var(--mj)} .dot.JQ{background:var(--jq)} .dot.AMBAS{background:var(--brand)}
+.pill{font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
+.pill.pend{background:var(--surface-2);color:var(--ink-2)}
+.pill.doing{background:var(--brand-tint);color:var(--brand-text)}
+.pill.block{background:var(--warn-tint);color:var(--warn)}
+.pill.done{background:var(--good-tint);color:var(--good)}
+.pill.late{background:var(--crit-tint);color:var(--crit)}
+.pill.gate{background:var(--ink);color:var(--bg)}
+.tid{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);font-weight:600}
+
+/* Hoy */
+.daynav{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.daynav .d{font-family:var(--f-display);font-weight:700;font-size:16px;min-width:180px;text-align:center}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.cols{grid-template-columns:1fr}}
+.col{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;min-width:0}
+.col-h{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line)}
+.col-h .who{font-family:var(--f-display);font-weight:700;font-size:16px}
+.col-h .role{font-size:12.5px;color:var(--ink-3)}
+.col-h .hrs{margin-left:auto;font-family:var(--f-mono);font-size:13px;color:var(--ink-2)}
+.col.MJ .col-h{box-shadow:inset 4px 0 0 var(--mj)} .col.JQ .col-h{box-shadow:inset 4px 0 0 var(--jq)}
+.blocks{display:grid;gap:12px;padding:14px}
+.block{border:1px solid var(--line);border-radius:var(--r-sm);padding:12px 14px;background:var(--surface);min-width:0}
+.block-h{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.block h3{font-size:15.5px;font-weight:700;margin-top:6px;line-height:1.3}
+.block .why{font-size:13.5px;color:var(--ink-2);margin:6px 0 0}
+.hrs-chip{font-family:var(--f-mono);font-size:12px;font-weight:600;background:var(--ink);color:var(--bg);padding:2px 7px;border-radius:6px}
+.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:4px}
+.steps li label{display:grid;grid-template-columns:20px 1fr;gap:8px;align-items:start;padding:5px 6px;border-radius:6px;cursor:pointer;font-size:14px}
+.steps li label:hover{background:var(--surface-2)}
+.steps input{width:16px;height:16px;margin:3px 0 0;accent-color:var(--brand)}
+.steps input:checked+span{color:var(--ink-3);text-decoration:line-through;text-decoration-color:var(--ink-3)}
+.steps .n{font-family:var(--f-mono);font-size:11.5px;color:var(--ink-3);margin-right:4px}
+.block-f{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.wait{font-size:12.5px;color:var(--warn);font-weight:600}
+.empty{padding:22px 16px;color:var(--ink-3);font-size:14px}
+
+/* Kanban */
+.kanban{display:grid;grid-template-columns:repeat(4,minmax(240px,1fr));gap:12px;overflow-x:auto;padding-bottom:8px}
+.kcol{background:var(--surface-2);border-radius:var(--r);padding:10px;min-height:200px;min-width:0}
+.kcol.over{outline:2px dashed var(--brand);outline-offset:-4px}
+.kcol-h{display:flex;align-items:center;gap:8px;padding:4px 4px 10px;font-weight:700;font-size:14px}
+.kcol-h .c{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);margin-left:auto}
+.kcards{display:grid;gap:8px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:10px 12px;cursor:pointer;text-align:left;width:100%;display:grid;gap:6px}
+.card:hover{border-color:var(--ink-3)}
+.card[draggable="true"]{cursor:grab}
+.card .t{font-weight:600;font-size:14px;line-height:1.3}
+.card .meta{display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:12px;color:var(--ink-3)}
+.mini{height:4px;background:var(--surface-3);border-radius:99px;overflow:hidden}
+.mini>i{display:block;height:100%;background:var(--brand)}
+
+/* Cronograma */
+.weeks{display:grid;gap:14px}
+.week{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.week-h{display:flex;align-items:baseline;gap:10px;padding:12px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.week-h h3{font-size:15px}
+.week-h .r{font-size:13px;color:var(--ink-3)}
+.week-h .g{margin-left:auto}
+.gridwrap{overflow-x:auto}
+.wgrid{display:grid;grid-template-columns:110px repeat(5,minmax(130px,1fr));min-width:760px}
+.wgrid>div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:8px;min-width:0}
+.wgrid>div:nth-child(6n){border-right:0}
+.wgrid .hd{font-size:12px;font-weight:700;color:var(--ink-3);text-transform:uppercase;letter-spacing:.05em;background:var(--surface-2)}
+.wgrid .hd.today{color:var(--brand-text);background:var(--brand-tint)}
+.wgrid .rowlbl{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px}
+.wgrid .off{background:repeating-linear-gradient(135deg,var(--surface-2) 0 6px,transparent 6px 12px);font-size:12px;color:var(--ink-3)}
+.wgrid .cell{display:grid;gap:5px;align-content:start}
+.wgrid .cell.today{background:color-mix(in srgb,var(--brand-tint) 55%,transparent)}
+.tchip{display:grid;gap:1px;text-align:left;border:0;border-left:3px solid var(--line);background:var(--surface-2);padding:5px 7px;border-radius:5px;font-size:12px;cursor:pointer;line-height:1.3;width:100%}
+.tchip.MJ{border-left-color:var(--mj)} .tchip.JQ{border-left-color:var(--jq)} .tchip.AMBAS{border-left-color:var(--brand)}
+.tchip b{font-family:var(--f-mono);font-size:11px;color:var(--ink-3)}
+.tchip.done{opacity:.6} .tchip.done span{text-decoration:line-through}
+.tchip.late{background:var(--crit-tint)}
+
+/* Fases */
+.phases{display:grid;gap:14px}
+.phase{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px}
+.phase-h{display:flex;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.phase-h .n{font-family:var(--f-mono);font-size:12px;color:var(--ink-3);font-weight:600}
+.phase-h h3{font-size:18px}
+.phase-h .pct{margin-left:auto;font-family:var(--f-display);font-size:22px;font-weight:700}
+.gate{display:flex;gap:8px;align-items:center;margin-top:8px;font-size:13.5px;color:var(--ink-2)}
+.diamond{width:10px;height:10px;transform:rotate(45deg);border:2px solid var(--ink-2);flex:none}
+.diamond.ok{background:var(--good);border-color:var(--good)}
+.tlist{display:grid;margin-top:12px;border-top:1px solid var(--line)}
+.trow{display:grid;grid-template-columns:62px 1fr auto auto;gap:10px;align-items:center;padding:8px 2px;border:0;border-bottom:1px solid var(--line);background:none;text-align:left;cursor:pointer;width:100%;font-size:14px}
+.trow:hover{background:var(--surface-2)}
+.trow .t{min-width:0}
+.trow .dates{font-size:12.5px;color:var(--ink-3);white-space:nowrap}
+@media (max-width:600px){.trow{grid-template-columns:52px 1fr auto}.trow .dates{display:none}}
+
+/* Marca */
+.swatches{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px}
+.sw{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.sw .c{height:86px;display:flex;align-items:flex-end;padding:8px 10px;gap:6px}
+.sw .c span{font-size:13px;font-weight:700;padding:1px 6px;border-radius:4px}
+.sw .b{padding:10px 12px;display:grid;gap:4px;font-size:13px}
+.sw .b strong{font-size:14px}
+.cr{display:flex;flex-wrap:wrap;justify-content:space-between;gap:2px 8px;font-size:12.5px}.cr .mono{white-space:nowrap}
+.ok{color:var(--good);font-weight:700} .bad{color:var(--crit);font-weight:700} .mid{color:var(--warn);font-weight:700}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:820px){.two{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;min-width:0}
+.panel h3{font-size:16px;margin-bottom:8px}
+.changes{margin:0;padding-left:18px;display:grid;gap:8px;font-size:14px}
+.pairs{display:grid;gap:8px}
+.pair{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:13.5px}
+.pair .demo{padding:6px 12px;border-radius:6px;font-weight:700;font-size:13px;white-space:nowrap}
+
+/* Ajustes */
+.form{display:grid;gap:14px;max-width:720px}
+.field{display:grid;gap:5px}
+.field label{font-weight:600;font-size:13.5px}
+.field .hint{font-size:12.5px;color:var(--ink-3)}
+.field input,.field select,.field textarea{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 10px;width:100%}
+.field textarea{min-height:90px;resize:vertical}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:560px){.row2{grid-template-columns:1fr}}
+.switch{display:flex;gap:10px;align-items:flex-start;font-size:14px}
+.switch input{width:18px;height:18px;accent-color:var(--brand);margin-top:2px}
+
+/* Drawer */
+.scrim{position:fixed;inset:0;background:rgba(13,13,18,.45);z-index:40}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(560px,100%);background:var(--surface);z-index:41;display:flex;flex-direction:column;box-shadow:-20px 0 40px -20px rgba(0,0,0,.35);padding-top:env(safe-area-inset-top,0px)}
+.dr-h{padding:16px 18px 12px;border-bottom:1px solid var(--line);display:grid;gap:8px}
+.dr-top{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.dr-top .x{margin-left:auto}
+.dr-h h2{font-size:19px;line-height:1.25}
+.dr-b{padding:16px 18px 40px;overflow-y:auto;display:grid;gap:18px;align-content:start;padding-bottom:calc(40px + env(safe-area-inset-bottom,0px))}
+.sec h4{font-size:12px;text-transform:uppercase;letter-spacing:.07em;color:var(--ink-3);margin:0 0 6px;font-family:var(--f-body)}
+.sec p{margin:0;font-size:14.5px}
+.statuses{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.statuses button{border:1px solid var(--line);background:var(--surface);border-radius:var(--r-sm);padding:7px 4px;font-weight:600;font-size:13px;cursor:pointer}
+.statuses button[aria-pressed="true"].pend{background:var(--surface-3);border-color:var(--ink-3)}
+.statuses button[aria-pressed="true"].doing{background:var(--brand-tint);border-color:var(--brand);color:var(--brand-text)}
+.statuses button[aria-pressed="true"].block{background:var(--warn-tint);border-color:var(--warn);color:var(--warn)}
+.statuses button[aria-pressed="true"].done{background:var(--good-tint);border-color:var(--good);color:var(--good)}
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:14px}
+.kv dt{color:var(--ink-3)} .kv dd{margin:0}
+.res{display:grid;gap:4px;font-size:14px;margin:0;padding-left:18px}
+.notes{width:100%;min-height:110px;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-sm);padding:8px 10px;resize:vertical}
+.deps{display:flex;gap:6px;flex-wrap:wrap}
+.deps button{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:3px 10px;font-size:12.5px;cursor:pointer;display:inline-flex;gap:6px;align-items:center}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:999px;font-weight:600;font-size:13.5px;z-index:60}
+.confirm{display:flex;gap:8px;align-items:center;flex-wrap:wrap;background:var(--crit-tint);padding:10px 12px;border-radius:var(--r-sm);font-size:14px}
+@media (prefers-reduced-motion:no-preference){
+  .drawer.anim{animation:slide .18s ease-out}
+  @keyframes slide{from{transform:translateX(24px);opacity:.6}to{transform:none;opacity:1}}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <h1>Imperium Lab · Plan de arranque</h1>
+        <p id="subtitle">Dos socias · 2 horas al día cada una</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="saved" id="saved" aria-live="polite"></span>
+      <button class="btn iconbtn" id="themeBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Tema"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+  <div class="rule"></div>
+  <nav class="wrap tabs" role="tablist" aria-label="Vistas">
+    <button class="tab" role="tab" data-view="hoy">Hoy</button>
+    <button class="tab" role="tab" data-view="tablero">Tablero</button>
+    <button class="tab" role="tab" data-view="crono">Cronograma</button>
+    <button class="tab" role="tab" data-view="fases">Fases</button>
+    <button class="tab" role="tab" data-view="marca">Marca</button>
+    <button class="tab" role="tab" data-view="ajustes">Ajustes</button>
+  </nav>
+</header>
+
+<div class="wrap"><section class="summary" id="summary" aria-label="Resumen"></section></div>
+<main class="wrap" id="view"></main>
+<div id="drawerRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+const L = {
+  sicMarcas: ["SIC · Marcas", "https://sedeelectronica.sic.gov.co/temas/propiedad-industrial/marcas"],
+  sicTarifas: ["SIC · Tarifas 2026 (Res. 77243/2025)", "https://sedeelectronica.sic.gov.co/transparencia/normativa/resolucion-no-77243-del-30-de-septiembre-del-2025"],
+  rues: ["RUES", "https://www.rues.org.co"],
+  imperiumlabs: ["imperiumlabs.co (estudio de videojuegos)", "https://imperiumlabs.co/"],
+  gSender: ["Google · Directrices para remitentes", "https://support.google.com/a/answer/81126?hl=es"],
+  hubspotIcp: ["HubSpot · Plantilla de ICP", "https://www.hubspot.com/make-my-persona/ideal-customer-profile-template"],
+  hubspotCac: ["HubSpot · Cálculo de CAC", "https://www.hubspot.com/startups/sales-and-marketing/calculating-cac-for-startups"],
+  clutch: ["Clutch · Precios de diseño web", "https://clutch.co/web-designers/pricing"],
+  verjel: ["Precios web en Colombia (blog de proveedor)", "https://www.alejandroverjel.com/blog/diseno/cuanto-cuesta-pagina-web-colombia/"],
+  pivoti: ["Precios web en Bogotá (blog de proveedor)", "https://www.pivotilabs.com/blog/cuanto-cuesta-pagina-web-bogota"],
+  enns: ["Pricing Creativity (resumen)", "https://www.peterkang.com/lessons-from-pricing-creativity-by-blair-enns/"],
+  dyf: ["Cobrar el diagnóstico (Double Your Freelancing)", "https://doubleyourfreelancing.com/how-to-get-paid-for-project-discovery/"],
+  dianRst: ["DIAN · Régimen Simple", "https://micrositios.dian.gov.co/regimen-simple-tributacion/quienes-pueden-optar-por-el-simple/"],
+  dian977: ["DIAN · Concepto 977/2023 (tarifas RST)", "https://normograma.dian.gov.co/dian/compilacion/docs/oficio_dian_0977_2023.htm"],
+  dianCiiu: ["DIAN · Resolución 114/2020 (CIIU)", "https://normograma.dian.gov.co/dian/compilacion/docs/resolucion_dian_0114_2020.htm"],
+  dianFe: ["DIAN · Requisitos de facturador electrónico", "https://micrositios.dian.gov.co/sistema-de-facturacion-electronica/requerimientos-para-ser-facturador-electronico/"],
+  ccbLey1780: ["CCB · Ley de Emprendimiento Juvenil", "https://www.ccb.org.co/es/tramites-y-consultas/sobre-registros/normativas-registros-publicos/normativas-registros-publicos/ley-de-emprendimiento-juvenil"],
+  ley1258: ["Ley 1258 de 2008 (SAS)", "https://normas.cra.gov.co/gestor/docs/ley_1258_2008.htm"],
+  rm01: ["CCB · Guía RM01 para SAS", "https://assets.ctfassets.net/n1ptkpqt763u/2qPY8BkR0Awl2GgbTeQQri/1ed118cb5a6cf3ba9a9f61099d53ac81/GuiaRM_01.pdf"],
+  sasVirtual: ["CCB · SAS virtual", "https://www.ccb.org.co/es/servicios/crea-tu-empresa/constituye-tu-empresa/constitucion-virtual-sas"],
+  vue: ["Ventanilla Única Empresarial", "https://www.vue.gov.co/"],
+  ccbTarifas: ["CCB · Tarifas 2026", "https://assets.ctfassets.net/n1ptkpqt763u/3Y8yhxlVbzjMyD7njbElNL/a4bfae899c2186d803ec833699eb192c/Tarifas_Registros_Publicos_2026_y_afiliados.pdf"],
+  rnbd: ["SIC · Quién debe inscribirse en el RNBD", "https://sedeelectronica.sic.gov.co/publicaciones/boletin-juridico/concepto/cuales-personas-estan-obligadas-realizar-el-registro-de-bases-de-datos-personales-en-el-rnbd"],
+  sicCorp: ["SIC · Datos corporativos y Ley 1581", "https://sedeelectronica.sic.gov.co/boletin-juridico/conceptos/ambito-de-aplicacion-de-la-ley-1581-de-2012-en-datos-corporativos"],
+  wheeler: ["Alina Wheeler · fases de identidad", "https://logogeek.uk/podcast/design-a-brand-identity-with-alina-wheeler/"],
+  ixdf: ["IxDF · Qué lleva un manual de marca", "https://ixdf.org/literature/topics/brand-guidelines"],
+  wcag: ["W3C · WCAG 2.2", "https://www.w3.org/TR/WCAG22/"],
+  vitals: ["web.dev · Core Web Vitals", "https://web.dev/articles/vitals"],
+  owaspH: ["OWASP · Cabeceras HTTP", "https://cheatsheetseries.owasp.org/cheatsheets/HTTP_Headers_Cheat_Sheet.html"],
+  owasp10: ["OWASP Top 10:2025", "https://top10.owasp.org/2025/"],
+  gSchema: ["Google · Datos estructurados", "https://developers.google.com/search/docs/appearance/structured-data/intro-structured-data"],
+  gSitemap: ["Google · Sitemaps", "https://developers.google.com/search/docs/crawling-indexing/sitemaps/overview"],
+  gAi: ["Google · Contenido hecho con IA", "https://developers.google.com/search/docs/fundamentals/using-gen-ai-content"],
+  gbp: ["Google · Directrices del Perfil de Empresa", "https://support.google.com/business/answer/3038177?hl=es"],
+  hubspot: ["HubSpot · Precios CRM", "https://www.hubspot.com/pricing/crm"],
+  odoo: ["Odoo · Precios", "https://www.odoo.com/pricing-plan"],
+  odooCo: ["Odoo · Localización Colombia", "https://www.odoo.com/documentation/19.0/es/applications/finance/fiscal_localizations/colombia.html"],
+  n8n: ["n8n · Precios", "https://n8n.io/pricing/"],
+  n8nLic: ["n8n · Licencia (qué se puede vender)", "https://docs.n8n.io/n8n-community-license/community-license/license-faq"],
+  make: ["Make · Precios", "https://www.make.com/en/pricing"],
+  wompi: ["Wompi · Tarifas", "https://wompi.com/es/co/planes-tarifas/plan-avanzado-agregador"],
+  bold: ["Bold · Tarifas", "https://bold.co/tarifas"],
+  ruesDb: ["Bases de datos del RUES", "https://www.camaramedellin.com.co/quiero-un-servicio-para-mi-empresa/informacion-estudios-y-bases-de-datos/bases-de-datos-de-empresas-registradas-en-el-registro-unico-empresarial-y-social-rues"],
+  mapsTos: ["Google Maps Platform · Términos", "https://cloud.google.com/maps-platform/terms"],
+  close: ["Close · Plantillas de correo en frío", "https://close.com/blog/cold-email-templates"],
+  saleshandy: ["Saleshandy · Estructuras de correo", "https://www.saleshandy.com/blog/cold-email-frameworks/"],
+  lemlist: ["Lemlist · Correo en frío", "https://www.lemlist.com/blog/cold-emailing"],
+  ley2300: ["Ley 2300 de 2023", "https://normograma.com/documentospdf/PruebaMintic/docs/ley_2300_2023.htm"],
+  waPolicy: ["Política de WhatsApp Business", "https://whatsappbusiness.com/policy/"],
+  ross: ["Predictable Revenue (notas)", "https://grahammann.net/book-notes/predictable-revenue-aaron-ross-marylou-tyler"],
+  hootsuite: ["Hootsuite · Frecuencia por red", "https://blog.hootsuite.com/how-often-to-post-on-social-media/"],
+  hootIg: ["Hootsuite · Algoritmo de Instagram", "https://blog.hootsuite.com/instagram-algorithm/"],
+  ctwa: ["Meta · Anuncios clic a WhatsApp", "https://developers.facebook.com/documentation/ads-commerce/marketing-api/ad-creative/messaging-ads/click-to-whatsapp"],
+  waPricing: ["Meta · Precios de WhatsApp", "https://developers.facebook.com/docs/whatsapp/pricing/"],
+  sparktoro: ["SparkToro · Encuesta a agencias", "https://sparktoro.com/blog/digital-agency-new-business-still-a-concern-referrals-still-rule-for-lead-gen-and-are-sales-pipelines-finally-recovering/"],
+  effichat: ["Effichat", "https://effichat.efficommerce.com/"],
+  ruta: ["CCB · Ruta Bogotá Cundinamarca Emprende", "https://www.ccb.org.co/es/servicios/crea-tu-empresa/preparate-para-crear-tu-empresa/ruta-emprender"],
+  plan: ["Investigación estratégica (doc)", "https://claude.ai/code/artifact/bb50d6fe-b609-4569-80c1-aa2c94769533"]
+};
+
+const PHASES = [
+  { id: "f0", n: "Fase 0", name: "Validar", gate: "El nombre se puede registrar y las 7 decisiones están tomadas" },
+  { id: "f1", n: "Fase 1", name: "Formalizar", gate: "NIT activo y primera factura electrónica emitida" },
+  { id: "f2", n: "Fase 2", name: "Marca", gate: "Manual de marca v2 aprobado por ambas" },
+  { id: "f3", n: "Fase 3", name: "Plataforma propia", gate: "imperiumlab.co pasa su propia Acta de calidad" },
+  { id: "f4", n: "Fase 4", name: "Captación", gate: "Revisión del embudo con datos de 3 lotes" }
+];
+
+const TASKS = [
+{ id:"T01", f:"f0", o:"MJ", h:2, gate:true,
+  t:"Verificar que «Imperium Lab» se puede registrar como marca",
+  why:"El dominio ya es suyo, pero un dominio no da derechos de marca. Existe un estudio de videojuegos llamado Imperium Labs con un dominio casi igual.",
+  steps:[
+    "Entra a la sede electrónica de la SIC → Propiedad industrial → Marcas y busca IMPERIUM, IMPERIUM LAB, IMPERIUMLAB e IMPERIUM LABS.",
+    "Revisa los resultados en las clases de Niza 42 (desarrollo de software), 9 (software descargable) y 35 (publicidad y gestión).",
+    "Anota cada resultado parecido en una tabla: signo, titular, clase y estado (vigente, en trámite, negada).",
+    "Busca «Imperium» en el RUES para ver si alguna sociedad colombiana ya usa el nombre.",
+    "Abre imperiumlabs.co y anota su sector y si opera en Colombia.",
+    "Si queda alguna duda, paga la búsqueda oficial de antecedentes de la SIC: COP 29.500 por signo en línea.",
+    "Escribe la conclusión en 5 líneas con semáforo: verde (seguir), amarillo (ajustar diseño o nombre), rojo (cambiar)."],
+  out:"Informe de antecedentes de 1 página con semáforo.",
+  done:"Las dos leyeron el informe y el semáforo está en verde, o hay un plan B acordado.",
+  res:["sicMarcas","sicTarifas","rues","imperiumlabs"] },
+
+{ id:"T02", f:"f0", o:"JQ", h:1,
+  t:"Reservar @imperiumlab en las redes",
+  why:"Asegurar el mismo usuario en todas las redes antes de anunciar el nombre.",
+  steps:[
+    "Revisa si @imperiumlab está libre en Instagram, TikTok, Facebook y LinkedIn.",
+    "Si no está libre en alguna, elige una sola variante para todas (por ejemplo @imperiumlab.co).",
+    "Crea las cuentas como cuentas de empresa o profesionales.",
+    "Activa la verificación en dos pasos en las cuatro.",
+    "Guarda los accesos en un gestor de contraseñas compartido entre las dos.",
+    "No publiques todavía: deja solo el nombre y una imagen provisional."],
+  out:"Lista de cuentas con usuario, correo de registro y responsable.",
+  done:"Las cuatro cuentas existen con el mismo usuario y con 2FA activa.",
+  res:[] },
+
+{ id:"T20", f:"f2", o:"JQ", h:2,
+  t:"Auditar el manual de marca actual",
+  why:"El manual habla de Imperial Tech, de herramientas no-code y de IA al centro. El nuevo diferenciador es la web hecha con buenas prácticas verificables.",
+  steps:[
+    "Lista todo lo que dice «Imperial Tech» o «soyimperialtech.com» y debe pasar a «Imperium Lab» e «imperiumlab.co».",
+    "Marca las contradicciones con el diferenciador: el pilar 2 dice «herramientas no-code» y la promesa pone la IA al centro.",
+    "Compara la misión («micronegocios que no pueden pagar una agencia») con la vertical y los precios que se van a decidir.",
+    "Revisa el contraste de la paleta (pestaña Marca): violeta con texto blanco da 4,36:1 y naranja con texto blanco 2,84:1. Ninguno pasa WCAG AA para texto normal.",
+    "Anota lo que falta: versiones del logo, área de respeto, tamaño mínimo, usos incorrectos, tipografías con nombre, iconografía, fotografía y aplicaciones.",
+    "Decide qué se conserva: la corona de tres formas y la «I» central siguen funcionando para Imperium.",
+    "Entrega una lista de cambios ordenada por prioridad."],
+  out:"Lista priorizada de cambios del manual.",
+  done:"MJ leyó la lista y no tiene objeciones.",
+  res:["ixdf","wcag"] },
+
+{ id:"T03", f:"f0", o:"MJ", h:2,
+  t:"Correo @imperiumlab.co en Google Workspace con SPF, DKIM y DMARC",
+  why:"Ya tienen los correos en Google. El dominio nuevo debe enviar correo confiable antes de cualquier prospección.",
+  steps:[
+    "En admin.google.com agrega imperiumlab.co como dominio (alias o secundario, según cómo esté configurada hoy la cuenta).",
+    "Verifica el dominio con el registro TXT que da Google, en el panel DNS del proveedor donde compraron el dominio.",
+    "Configura los registros MX que indica Google y prueba enviar y recibir.",
+    "Publica el SPF: un solo TXT en la raíz con «v=spf1 include:_spf.google.com ~all». Si ya existe uno, combínalos.",
+    "Activa DKIM: Apps → Google Workspace → Gmail → Autenticar correo electrónico. Genera la clave, publica el TXT y pulsa «Iniciar autenticación».",
+    "Publica DMARC en _dmarc.imperiumlab.co: «v=DMARC1; p=none; rua=mailto:<correo de reportes>».",
+    "Envía un correo a una cuenta Gmail externa, abre «Mostrar original» y confirma SPF, DKIM y DMARC en PASS.",
+    "Crea hola@imperiumlab.co y una dirección por socia, con firma provisional."],
+  out:"Correos funcionando y captura de «Mostrar original» con los tres PASS.",
+  done:"SPF, DKIM y DMARC en PASS y las dos envían desde @imperiumlab.co.",
+  res:["gSender"] },
+
+{ id:"T04", f:"f0", o:"JQ", h:2,
+  t:"Elegir la vertical inicial y escribir el ICP",
+  why:"Especializarse en un tipo de cliente baja la competencia por precio y hace que cada caso sirva para el siguiente.",
+  steps:[
+    "Lista 3 verticales candidatas: distribuidoras y mayoristas que venden por WhatsApp, comercios con catálogo y servicios con citas.",
+    "Califica cada una de 1 a 5 en: dolor visible, capacidad de pago, facilidad para llegarles y caso propio (Estancoficial).",
+    "Elige la de mayor puntaje.",
+    "Escribe el ICP en 1 página con los 6 criterios de HubSpot: industria, presupuesto, urgencia, potencial, tamaño y ubicación.",
+    "Agrega señales que se vean desde afuera: web lenta o inexistente, pedidos por WhatsApp a mano, catálogo en PDF.",
+    "Define quién decide la compra y qué le duele.",
+    "Anota en qué se diferencia del público del manual actual (emprendedores y micronegocios) para la sesión de decisiones."],
+  out:"ICP de 1 página.",
+  done:"El ICP permite decir sí o no a un prospecto en menos de un minuto.",
+  res:["hubspotIcp"] },
+
+{ id:"T06", f:"f0", o:"MJ", h:2,
+  t:"Costeo y punto de equilibrio",
+  why:"Los precios nuevos necesitan un piso: lo mínimo que se puede cobrar sin perder plata.",
+  steps:[
+    "Lista los costos fijos mensuales: Google Workspace, dominio, hosting, herramientas (CRM, n8n), contador y cuenta bancaria.",
+    "Lista los costos variables por proyecto: hosting del cliente, comisiones de pasarela y licencias.",
+    "Estima las horas reales que tomó Estancoficial, por tipo de tarea.",
+    "Calcula el costo por hora objetivo: ingreso mensual deseado por socia dividido por las horas facturables.",
+    "Calcula el precio mínimo de cada paquete con un margen definido.",
+    "Calcula cuántos proyectos al mes cubren los costos fijos.",
+    "Comparte la hoja con JQ antes de la sesión de precios."],
+  out:"Hoja de costeo con precio mínimo por paquete.",
+  done:"JQ puede usar la hoja para fijar precios sin preguntar nada.",
+  res:[] },
+
+{ id:"T05", f:"f0", o:"JQ", h:2, deps:["T04","T06"],
+  t:"Rediseñar los precios en tres opciones y un diagnóstico pagado",
+  why:"Tres opciones hacen que el cliente elija cuál y no si compra. El diagnóstico pagado filtra prospectos y paga la preventa.",
+  steps:[
+    "Usa el costeo de MJ como piso.",
+    "Define 3 paquetes (por ejemplo Esencial, Crecimiento y A la medida) con alcance, plazo y garantía.",
+    "Define el diagnóstico pagado: auditoría de web y WhatsApp con informe, y si se descuenta del proyecto.",
+    "Define qué incluye cada plan de soporte (hoy COP 80.000, 150.000 y 200.000 al mes).",
+    "Compara con referencias: web corporativa COP 2,5 a 6 millones y sitio de 5 a 8 páginas en Bogotá COP 5 a 9 millones, según blogs de proveedores sin metodología.",
+    "Decide dónde quedan frente al «punto medio inteligente» del manual.",
+    "Escribe la tabla de precios de 1 página para la web y las propuestas."],
+  out:"Tabla de precios v1.",
+  done:"Precios aprobados por las dos en la sesión de decisiones.",
+  res:["enns","dyf","verjel","pivoti","clutch"] },
+
+{ id:"T07", f:"f0", o:"AMBAS", h:1, deps:["T01","T04","T06","T05"], gate:true,
+  t:"Sesión de decisiones de arranque",
+  why:"Siete decisiones frenan todo lo demás. Se toman juntas, una vez, y quedan escritas.",
+  steps:[
+    "Nombre: ¿seguimos con Imperium Lab según el semáforo de T01?",
+    "Vertical inicial (según T04).",
+    "SAS virtual con estatutos estándar o constitución tradicional con estatutos propios.",
+    "Régimen Simple u ordinario: queda pendiente de la reunión con el contador.",
+    "CRM: Odoo todo en uno, o HubSpot Free más un software de facturación.",
+    "Precios en tres opciones (según T05).",
+    "Posicionamiento: el manual dice «democratizar, no-code»; el plan dice «buenas prácticas verificables». Elegir uno y escribirlo en una frase.",
+    "Definir quién será la representante legal y quién la suplente.",
+    "Escribir las decisiones en las notas de esta tarea."],
+  out:"Acta de decisiones en las notas de la tarea.",
+  done:"Las 7 decisiones están escritas y las dos están de acuerdo.",
+  res:["plan"] },
+
+{ id:"T08", f:"f1", o:"MJ", h:2, deps:["T07"],
+  t:"Reunión con contador: régimen, CIIU e ICA",
+  why:"La decisión tributaria cambia el RUT, las tarifas y lo que se cobra al cliente.",
+  steps:[
+    "Prepara las preguntas antes de la reunión.",
+    "Régimen Simple u ordinario. El RST para servicios profesionales arranca en 5,9% hasta 6.000 UVT; confirmar en qué grupo cae el desarrollo de software.",
+    "CIIU principal 6201 y secundarios 6202, 6311 o 6312.",
+    "ICA en Bogotá: tarifa por CIIU y fechas de declaración.",
+    "Capital suscrito y pagado sugerido.",
+    "Si aplica el beneficio de la Ley 1780 (socias de 18 a 35 años) y si sigue vigente en 2026.",
+    "Obligaciones mensuales (retenciones, IVA si aplica, facturación) y honorarios del contador.",
+    "Escribe las respuestas en las notas de la tarea."],
+  out:"Respuestas del contador por escrito.",
+  done:"Saben qué régimen elegir en el RUT y qué CIIU registrar.",
+  res:["dianRst","dian977","dianCiiu","ccbLey1780"] },
+
+{ id:"T21", f:"f2", o:"JQ", h:2, deps:["T07","T20"],
+  t:"Brief de marca Imperium Lab",
+  why:"El logo y el manual salen de la estrategia, no al revés.",
+  steps:[
+    "Propósito en una frase.",
+    "Para quién: resumen del ICP.",
+    "Promesa nueva que incluya el Acta de calidad.",
+    "Tres pilares reescritos. Sugerencia: hecho a mano con estándares verificables; un negocio que funciona solo (web, WhatsApp y automatización); acompañamiento en lenguaje claro.",
+    "Qué significa «Lab»: un taller donde se prueba y se mide.",
+    "Tono: decidan entre tú y usted. El manual menciona «vos», que es poco común en Bogotá; evalúen si conecta con su público.",
+    "Tres palabras que sí son la marca y tres que no.",
+    "Valida el brief con MJ."],
+  out:"Brief de marca de 1 página.",
+  done:"Las dos firman el brief.",
+  res:["wheeler"] },
+
+{ id:"T09", f:"f1", o:"MJ", h:4, deps:["T08"],
+  t:"Estatutos y acuerdo entre socias",
+  why:"Deja escrito cómo se decide, cómo se reparte y qué pasa si una socia sale.",
+  steps:[
+    "Según la decisión de T07: SAS virtual (estatutos estándar no editables) o tradicional (estatutos propios).",
+    "Razón social: IMPERIUM LAB S.A.S. Verifica homonimia en el RUES.",
+    "Objeto social amplio: desarrollo de software, consultoría, automatización y marketing digital.",
+    "Capital autorizado, suscrito y pagado según el contador.",
+    "Reparto de acciones (por ejemplo 50/50) y representante legal con suplente.",
+    "Reglas de decisión, salida de una socia y propiedad intelectual del código a nombre de la SAS.",
+    "Si van por SAS virtual, escribe el acuerdo entre socias como documento privado aparte."],
+  out:"Borrador de estatutos o acuerdo entre socias.",
+  done:"Borrador listo para revisión de JQ.",
+  res:["ley1258","rm01","sasVirtual"] },
+
+{ id:"T10", f:"f1", o:"JQ", h:1, deps:["T09"],
+  t:"Revisar y aprobar los estatutos",
+  why:"Los estatutos los firman las dos.",
+  steps:[
+    "Lee el borrador completo.",
+    "Deja comentarios en el documento.",
+    "Acuerden los cambios en una llamada corta.",
+    "Aprueba la versión final."],
+  out:"Estatutos aprobados.",
+  done:"Versión final sin comentarios abiertos.",
+  res:[] },
+
+{ id:"T11", f:"f1", o:"MJ", h:2, deps:["T10","T01"],
+  t:"Constituir la SAS en la VUE",
+  why:"La CCB indica que en Bogotá la SAS virtual se tramita por la Ventanilla Única Empresarial.",
+  steps:[
+    "Entra a vue.gov.co y crea el usuario de cada socia.",
+    "Diligencia la constitución con los datos acordados.",
+    "Elige CIIU y régimen en el RUT: 05 (ordinario) o 47 (Simple), según el contador.",
+    "Adjunta los documentos pedidos.",
+    "Firma con la firma electrónica que suministra la CCB.",
+    "Paga matrícula, formulario RUES e impuesto de registro.",
+    "Guarda el número de radicado."],
+  out:"Radicado de constitución.",
+  done:"Trámite radicado y pagado.",
+  res:["vue","sasVirtual","ccbTarifas"] },
+
+{ id:"T22", f:"f2", o:"JQ", h:4, deps:["T21","T01"],
+  t:"Rediseñar el logo: exploración de 3 rutas",
+  why:"El logo actual es una corona de tres formas que giran con una «I» al centro. Hay que adaptarlo al nombre nuevo y hacerlo legible en tamaños pequeños.",
+  steps:[
+    "Revisa el logo actual y decide qué se conserva: la corona, las tres formas y la «I» de Imperium.",
+    "Regla: el símbolo debe leerse a 16 px (favicon) y dentro de un avatar circular.",
+    "Ruta A: evolución del símbolo actual con el nuevo wordmark «Imperium Lab».",
+    "Ruta B: símbolo simplificado, con menos piezas y sin depender del degradado.",
+    "Ruta C: monograma «IL» o «I» con la idea de laboratorio.",
+    "Prueba el wordmark con 2 o 3 tipografías sans gruesas de Google Fonts (licencia libre).",
+    "Muestra cada ruta en positivo, en negativo sobre #0D0D12 y en un solo color.",
+    "Arma en Figma una lámina que compare las tres rutas."],
+  out:"Lámina con 3 rutas de logo.",
+  done:"Las 3 rutas se ven bien a 16 px, 48 px y 300 px.",
+  res:["wheeler"] },
+
+{ id:"T16", f:"f1", o:"MJ", h:2,
+  t:"Política de tratamiento de datos y aviso de privacidad",
+  why:"La web, el chatbot y el CRM recogen datos personales (Ley 1581 de 2012).",
+  steps:[
+    "Responsable: Imperium Lab S.A.S., con datos de contacto.",
+    "Finalidades: contacto comercial, prestación de servicios y facturación.",
+    "Derechos de los titulares y canal de consultas y reclamos (correo).",
+    "Texto de autorización para formularios y chatbot, con casilla sin marcar por defecto.",
+    "Aviso de privacidad corto para la web.",
+    "Nota: el RNBD solo es obligatorio con activos superiores a 100.000 UVT, según la SIC.",
+    "Guarda la versión con fecha. Recomendado: revisión de un abogado."],
+  out:"Política y aviso de privacidad v1.",
+  done:"Textos listos para la web y los contratos.",
+  res:["rnbd","sicCorp"] },
+
+{ id:"T12", f:"f1", o:"MJ", h:1, deps:["T11"],
+  t:"Seguimiento: matrícula, NIT y certificado",
+  why:"Sin certificado y RUT no se abre cuenta ni se factura. Los tiempos dependen de la CCB.",
+  steps:[
+    "Revisa el estado del trámite cada dos días.",
+    "Si hay devolución, corrige y vuelve a radicar.",
+    "Descarga el certificado de existencia y representación legal.",
+    "Descarga el RUT con el NIT.",
+    "Guarda todo en la carpeta Legal compartida."],
+  out:"Certificado y RUT en la carpeta Legal.",
+  done:"La SAS tiene NIT.",
+  res:["sasVirtual"] },
+
+{ id:"T23", f:"f2", o:"AMBAS", h:1, deps:["T22"],
+  t:"Elegir la ruta de logo y validarla con 3 personas",
+  why:"Una prueba rápida con el público evita elegir solo por gusto.",
+  steps:[
+    "Cada una califica las 3 rutas: legible en pequeño, fácil de recordar y coherente con la promesa.",
+    "Elijan una.",
+    "Muéstrenla a 3 personas del público (por ejemplo Estancoficial y dos prospectos).",
+    "Hagan una sola pregunta: ¿qué tipo de empresa crees que es?",
+    "Escriban las respuestas y los ajustes en las notas."],
+  out:"Ruta elegida y 3 respuestas anotadas.",
+  done:"Hay ruta elegida y lista de ajustes.",
+  res:[] },
+
+{ id:"T13", f:"f1", o:"MJ", h:2, deps:["T12"],
+  t:"Abrir la cuenta bancaria de la empresa",
+  why:"Los pagos de clientes y la pasarela deben llegar a nombre de la SAS.",
+  steps:[
+    "Compara 2 o 3 bancos: cuota de manejo, costo de transferencias, banca en línea con dos usuarios y compatibilidad con la pasarela elegida.",
+    "Reúne certificado de existencia, RUT y cédula de la representante legal.",
+    "Abre la cuenta y activa el token o la app.",
+    "Actualiza los datos bancarios en el contrato modelo y en la propuesta."],
+  out:"Cuenta bancaria activa.",
+  done:"Se puede recibir una transferencia a nombre de la SAS.",
+  res:[] },
+
+{ id:"T14", f:"f1", o:"MJ", h:4, deps:["T12"], gate:true,
+  t:"Habilitarse como facturador electrónico y emitir la primera factura",
+  why:"Es la puerta de la Fase 1: con esto la empresa ya opera formalmente.",
+  steps:[
+    "Elige la solución: la gratuita de la DIAN o un software de facturación (o Odoo, si lo eligieron como CRM).",
+    "Regístrate como facturador electrónico en los servicios en línea de la DIAN.",
+    "Tramita el certificado de firma digital (gratuito con la solución de la DIAN).",
+    "Haz el set de pruebas de habilitación. En la solución gratuita: 2 facturas, 1 nota débito y 1 nota crédito.",
+    "Solicita la numeración autorizada.",
+    "Configura NIT, régimen, CIIU y resolución en la herramienta.",
+    "Emite la primera factura real, por ejemplo el próximo pago de un cliente."],
+  out:"Primera factura electrónica emitida.",
+  done:"La DIAN validó la primera factura.",
+  res:["dianFe"] },
+
+{ id:"T24", f:"f2", o:"JQ", h:4, deps:["T23"],
+  t:"Logo final y sistema de versiones",
+  why:"Un logo útil viene con sus versiones y reglas, no como una sola imagen.",
+  steps:[
+    "Vectoriza en un SVG limpio, con formas cerradas.",
+    "Versiones: horizontal, vertical y solo símbolo.",
+    "Variantes: positivo, negativo, monocromo negro y monocromo blanco.",
+    "Define el área de respeto (por ejemplo, la altura de la «I») y el tamaño mínimo en px y en mm.",
+    "Favicon 32×32, ícono 180×180 y avatar 1080×1080 para redes.",
+    "Exporta SVG, PNG @1x y @2x y PDF.",
+    "Ordena la carpeta Marca/Logo con nombres claros."],
+  out:"Paquete de logo completo.",
+  done:"MJ puede usar el logo en la web sin pedir ningún archivo.",
+  res:[] },
+
+{ id:"T15", f:"f1", o:"MJ", h:1, deps:["T12"],
+  t:"Inscripción en ICA Bogotá (RIT)",
+  why:"El ICA es un impuesto distrital. No pudimos verificar el proceso ni la tarifa: hay que confirmarlo.",
+  steps:[
+    "Confirma con el contador si la inscripción en el RIT quedó hecha con la matrícula o si se hace aparte.",
+    "Revisa el proceso en haciendabogota.gov.co.",
+    "Confirma la tarifa según el CIIU.",
+    "Pasa las fechas de declaración a Google Calendar."],
+  out:"Inscripción confirmada y fechas en el calendario.",
+  done:"Saben cuándo y cuánto declarar.",
+  res:[] },
+
+{ id:"T25", f:"f2", o:"JQ", h:2, deps:["T23"],
+  t:"Paleta y tipografía accesibles",
+  why:"Si venden webs que cumplen WCAG, su propia marca también debe cumplir.",
+  steps:[
+    "Conserva la regla 60-30-10 del manual.",
+    "Botón naranja de acción con texto #0D0D12 (6,84:1) en lugar de blanco (2,84:1).",
+    "Violeta para texto sobre blanco: un tono más oscuro, tipo #6A4BF0 (5,42:1).",
+    "Violeta sobre fondo oscuro: un tono claro, tipo #9D86FF (6,73:1).",
+    "Turquesa y azul solo como decoración o con texto oscuro.",
+    "Elige 2 familias con nombre en Google Fonts: una para títulos y otra para texto.",
+    "Escribe los tokens de color (nombre, hex y uso) para la web."],
+  out:"Tabla de color y tipografías definidas.",
+  done:"Cada combinación de texto y fondo da al menos 4,5:1.",
+  res:["wcag"] },
+
+{ id:"T17", f:"f1", o:"MJ", h:2, deps:["T12","T16"],
+  t:"Contrato modelo a nombre de la SAS",
+  why:"Los contratos nuevos deben quedar a nombre de la empresa, no de una socia.",
+  steps:[
+    "Parte del contrato de Estancoficial.",
+    "Cambia EL DESARROLLADOR por IMPERIUM LAB S.A.S., con NIT y representante legal.",
+    "Ajusta el IVA según el régimen elegido.",
+    "Agrega el Acta de calidad como anexo.",
+    "Actualiza la cláusula de datos personales con la política nueva.",
+    "Pon la cuenta bancaria nueva.",
+    "Recomendado: revisión de un abogado."],
+  out:"Contrato modelo v2.",
+  done:"Listo para el próximo cliente.",
+  res:[] },
+
+{ id:"T18", f:"f1", o:"MJ", h:2, deps:["T12","T01"],
+  t:"Radicar la marca ante la SIC",
+  why:"Protege el nombre en Colombia. La marca nominativa (solo palabras) no necesita el logo final.",
+  steps:[
+    "Radica primero la marca nominativa «IMPERIUM LAB».",
+    "Clase 42 como base. Evalúen 9 y 35 (cada clase adicional cuesta más).",
+    "Revisen si califican al programa PI-e (hasta 85% de descuento con certificado del CIGEPI) o a la tarifa MiPyme: COP 970.500 la primera clase en línea, frente a COP 1.348.500 la general.",
+    "Radica en línea a nombre de la SAS.",
+    "Guarda el radicado.",
+    "Pon en el calendario la publicación en la Gaceta: hay 30 días hábiles para oposiciones."],
+  out:"Radicado de solicitud de marca.",
+  done:"Solicitud pagada y radicada.",
+  res:["sicMarcas","sicTarifas"] },
+
+{ id:"T26", f:"f2", o:"JQ", h:4, deps:["T21","T25"],
+  t:"Manual v2: propuesta de valor e identidad (módulos 1 y 2)",
+  why:"El manual es la referencia para la web, las redes y las propuestas.",
+  steps:[
+    "Reemplaza nombre y dominio en todo el documento.",
+    "Reescribe misión, promesa y pitch de 15 segundos con el brief.",
+    "Reescribe el pilar 2: de «herramientas no-code» a «hecho con estándares verificables (Acta de calidad)».",
+    "Ajusta el posicionamiento al precio decidido.",
+    "Actualiza el significado del logo según la ruta elegida.",
+    "Actualiza la paleta con las reglas de contraste y nombra las tipografías.",
+    "Revisa los eslóganes frente a la promesa nueva.",
+    "Marca la versión como v2 con fecha."],
+  out:"Manual v2, módulos 1 y 2.",
+  done:"No queda ninguna mención a Imperial Tech ni a no-code.",
+  res:["ixdf"] },
+
+{ id:"T30", f:"f3", o:"MJ", h:2, deps:["T07"],
+  t:"Elegir CRM y herramienta de automatización",
+  why:"El CRM es la base de la operación. Elegirlo bien evita migrar después.",
+  steps:[
+    "Requisitos mínimos: leads, pipeline, propuestas, proyectos, tickets y facturación.",
+    "Opción A, Odoo: CRM, proyectos y facturación DIAN en uno. La API externa solo está en el plan Custom.",
+    "Opción B, HubSpot Free (2 usuarios y 1.000 contactos) más un software de facturación.",
+    "Automatizador: n8n Cloud Starter (EUR 20 al mes) o Make.",
+    "Prueba cada opción 30 minutos con un caso real (un lead de Estancoficial).",
+    "Decide y anota la razón en las notas."],
+  out:"Decisión de CRM y automatizador.",
+  done:"Hay cuenta creada en la herramienta elegida.",
+  res:["odoo","odooCo","hubspot","n8n","make"] },
+
+{ id:"T31", f:"f3", o:"MJ", h:4, deps:["T30"],
+  t:"Configurar el CRM",
+  why:"Todo cliente y prospecto vive en un solo lugar.",
+  steps:[
+    "Crea las etapas: Prospecto → Contactado → Respondió → Reunión → Diagnóstico pagado → Propuesta → Ganado / Perdido.",
+    "Crea los campos: vertical, fuente (frío, referido, alianza, redes, web), ciudad, tamaño, web actual y puntaje de PageSpeed.",
+    "Carga los clientes actuales (Estancoficial, SODO) y las oportunidades abiertas.",
+    "Crea las plantillas de correo.",
+    "Crea usuarios para las dos con verificación en dos pasos.",
+    "Arma la vista «mis tareas de hoy»."],
+  out:"CRM configurado con datos reales.",
+  done:"Las dos pueden registrar un lead en menos de un minuto.",
+  res:[] },
+
+{ id:"T27", f:"f2", o:"JQ", h:4, deps:["T24","T25"],
+  t:"Manual v2: uso del logo, aplicaciones y componentes web",
+  why:"Son las secciones que faltan hoy en el manual.",
+  steps:[
+    "Usos correctos e incorrectos del logo: no estirar, no cambiar colores, no poner sombras, no usar sobre fondos con poco contraste.",
+    "Área de respeto y tamaño mínimo.",
+    "Iconografía: estilo y grosor de línea.",
+    "Fotografía: personas y negocios reales, sin stock genérico.",
+    "Componentes web: botón primario violeta, botón de acción naranja, formularios y estados (foco visible, error, éxito).",
+    "Plantillas de redes: post, historia y carrusel.",
+    "Voz y tono con ejemplos de frases que sí y que no."],
+  out:"Manual v2 completo.",
+  done:"Alguien externo podría hacer un post sin preguntar nada.",
+  res:["ixdf"] },
+
+{ id:"T42", f:"f4", o:"MJ", h:1, deps:["T03"],
+  t:"Preparar el buzón para prospección",
+  why:"Un buzón nuevo que envía mucho de golpe termina en spam.",
+  steps:[
+    "Confirma SPF, DKIM y DMARC en PASS.",
+    "Configura Google Postmaster Tools para el dominio. La tasa de spam debe quedar por debajo de 0,30%.",
+    "Empieza con pocos envíos diarios y sube de a poco. Lemlist sugiere menos de 50 por día por buzón.",
+    "Firma con datos de contacto y una forma clara de no recibir más correos.",
+    "Carga las plantillas en el CRM."],
+  out:"Buzón listo para enviar.",
+  done:"Un correo de prueba llega a la bandeja principal de Gmail.",
+  res:["gSender","lemlist"] },
+
+{ id:"T47", f:"f4", o:"MJ", h:2, deps:["T04"],
+  t:"Mapa de aliados y primer contacto",
+  why:"En la encuesta de SparkToro los referidos son la principal fuente de clientes de las agencias.",
+  steps:[
+    "Lista 10 aliados posibles: contadores de pymes, agencias de marketing sin equipo técnico, proveedores de software (EFI/Effichat) y comunidades de emprendimiento.",
+    "Revisa la Ruta Bogotá Cundinamarca Emprende de la CCB.",
+    "Define una propuesta simple de referidos (comisión o intercambio).",
+    "Escribe el mensaje de contacto.",
+    "Registra a cada aliado en el CRM con fuente «Alianza»."],
+  out:"10 aliados en el CRM y mensaje listo.",
+  done:"Al menos 3 aliados contactados.",
+  res:["sparktoro","effichat","ruta"] },
+
+{ id:"T40", f:"f4", o:"MJ", h:4, deps:["T31","T12","T04"],
+  t:"Mapear 50 prospectos de la vertical",
+  why:"Lista corta y bien filtrada: es la base de la prospección con valor.",
+  steps:[
+    "Con la matrícula al día, averigua en la CCB cómo pedir la base de datos de empresas del RUES filtrada por CIIU de la vertical, Bogotá y rango de ingresos.",
+    "Revisa los candidatos uno a uno en Google Maps. No uses extractores masivos: los términos de Google lo prohíben.",
+    "Para cada uno anota: web (sí o no, y puntaje en PageSpeed), WhatsApp (manual o automatizado), decisor en LinkedIn y correo corporativo.",
+    "Carga cada uno en el CRM en la etapa Prospecto, con su fuente.",
+    "Clasifícalos en A, B o C según el ICP."],
+  out:"50 prospectos en el CRM.",
+  done:"Hay al menos 30 prospectos A o B.",
+  res:["ruesDb","mapsTos","sicCorp"] },
+
+{ id:"T28", f:"f2", o:"JQ", h:4, deps:["T27"],
+  t:"Aplicaciones: propuesta, contrato, Acta de calidad y firma de correo",
+  why:"Son las piezas que el cliente ve en cada venta.",
+  steps:[
+    "Plantilla de propuesta: 1 página más un anexo de precios.",
+    "Diseño del contrato con la marca (con el texto actualizado por MJ).",
+    "Acta de calidad: checklist de entrega con Core Web Vitals, WCAG 2.2 AA, SEO técnico, seguridad, datos personales y propiedad.",
+    "Firma de correo de Gmail para las dos.",
+    "Avatar y portada para las cuatro redes.",
+    "Tarjeta digital con QR a imperiumlab.co."],
+  out:"Kit de aplicaciones.",
+  done:"La próxima propuesta sale con la marca nueva.",
+  res:["vitals","wcag"] },
+
+{ id:"T29", f:"f2", o:"AMBAS", h:1, deps:["T26","T28"], gate:true,
+  t:"Aprobar el manual de marca v2",
+  why:"Es la puerta de la Fase 2. Sin manual aprobado no se diseña la web.",
+  steps:[
+    "Lean el manual completo.",
+    "Revisen: nombre y dominio correctos en todo el documento.",
+    "Revisen: todas las combinaciones de color dan al menos 4,5:1.",
+    "Revisen: el logo se lee a 16 px.",
+    "Aprueben la versión y guarden el PDF en la carpeta compartida.",
+    "Cambien las fotos de perfil en las redes."],
+  out:"Manual v2 aprobado en PDF.",
+  done:"Versión firmada por las dos.",
+  res:[] },
+
+{ id:"T41", f:"f4", o:"JQ", h:3, deps:["T05","T21"],
+  t:"Guiones: video diagnóstico, 4 correos y mensaje de LinkedIn",
+  why:"El primer contacto debe dar valor antes de pedir algo.",
+  steps:[
+    "Guion del video de 2 minutos: saludo con nombre, 3 hallazgos concretos de su web o WhatsApp, 1 idea y la invitación a 15 minutos.",
+    "Correo 1 (día 1) con el video: 50 a 150 palabras y un solo llamado a la acción.",
+    "Correos de los días 3, 7 y 12: seguimiento, caso y cierre amable.",
+    "Mensaje de conexión para LinkedIn.",
+    "Prueba las estructuras PAS y AIDA.",
+    "Incluye siempre una forma visible de no recibir más mensajes.",
+    "Ley 2300: lunes a viernes de 7 a.m. a 7 p.m. y sábados de 8 a.m. a 3 p.m., un contacto al día y sin varios canales la misma semana.",
+    "No escribas en frío por WhatsApp: la política de Meta pide consentimiento previo."],
+  out:"Guiones y plantillas listos.",
+  done:"MJ puede cargar las plantillas en el CRM.",
+  res:["close","saleshandy","ross","ley2300","waPolicy"] },
+
+{ id:"T49", f:"f4", o:"MJ", h:2, deps:["T31"],
+  t:"Tablero del embudo en el CRM",
+  why:"Sin números no se sabe qué canal vale la pena.",
+  steps:[
+    "Métricas por canal: prospectos, contactados, % de respuesta, % de respuestas positivas, reuniones, propuestas y cierres.",
+    "Ticket promedio por paquete.",
+    "CAC = (costos de ventas y marketing + horas valoradas) / clientes nuevos.",
+    "Relación LTV:CAC: HubSpot sugiere 3 o más.",
+    "Referencia de respuesta en frío: Close cita 5% a 15%. Ajusten la meta propia con el primer lote."],
+  out:"Tablero del embudo.",
+  done:"El tablero se actualiza solo con los datos del CRM.",
+  res:["hubspotCac","close"] },
+
+{ id:"T44", f:"f4", o:"JQ", h:2, deps:["T21"],
+  t:"Calendario de contenido de 4 semanas",
+  why:"Con 2 horas al día, la constancia depende de planear antes.",
+  steps:[
+    "Pilares: antes y después con PageSpeed, demo del chatbot en 30 segundos, educativo sobre el Acta de calidad, detrás de cámaras y casos.",
+    "Referencia de Hootsuite: Instagram y TikTok de 3 a 5 veces por semana.",
+    "Empiecen con 3 publicaciones por semana y reutilicen el mismo video vertical en Reels y TikTok.",
+    "Reels de menos de 90 segundos con gancho en los primeros 3 segundos.",
+    "Facebook principalmente para anuncios.",
+    "Arma la tabla semana por semana con tema, formato y fecha."],
+  out:"Calendario de 4 semanas.",
+  done:"Cada semana tiene 3 piezas definidas.",
+  res:["hootsuite","hootIg"] },
+
+{ id:"T46", f:"f4", o:"JQ", h:2, deps:["T24"],
+  t:"Caso de éxito Estancoficial",
+  why:"El primer caso es la mejor prueba de venta.",
+  steps:[
+    "Pide autorización escrita al cliente.",
+    "Reúne el antes y el después: capturas, tiempos de respuesta y pedidos por chatbot, si hay datos.",
+    "Pide una frase del cliente.",
+    "Formatos: página en la web, carrusel y PDF de 1 página.",
+    "No publiques cifras que el cliente no haya aprobado."],
+  out:"Caso en 3 formatos.",
+  done:"El cliente aprobó el texto.",
+  res:[] },
+
+{ id:"T43a1", f:"f4", o:"JQ", h:4, deps:["T40","T41"],
+  t:"Lote 1: grabar 10 videos diagnóstico",
+  why:"Cada video personalizado diferencia el primer contacto del spam.",
+  steps:[
+    "Elige 10 prospectos A del CRM.",
+    "Corre PageSpeed y revisa el WhatsApp de cada uno.",
+    "Graba un video de 2 minutos por prospecto (Loom o similar).",
+    "Pega el enlace del video en el CRM."],
+  out:"10 videos enlazados en el CRM.",
+  done:"MJ puede enviar el lote.",
+  res:["vitals"] },
+
+{ id:"T43b1", f:"f4", o:"MJ", h:2, deps:["T43a1","T42"],
+  t:"Lote 1: enviar la secuencia y registrar respuestas",
+  why:"El seguimiento es donde llega la mayoría de respuestas.",
+  steps:[
+    "Envía el correo 1 con el video, dentro del horario de la Ley 2300.",
+    "Programa en el CRM los recordatorios de los días 3, 7 y 12.",
+    "Registra cada respuesta y mueve la etapa.",
+    "Agenda reunión con quien responda.",
+    "Anota enviados, respuestas, respuestas positivas y reuniones."],
+  out:"Lote 1 enviado y medido.",
+  done:"Los 10 tienen estado actualizado en el CRM.",
+  res:["ley2300"] },
+
+{ id:"T45a", f:"f4", o:"JQ", h:4, deps:["T44","T24"],
+  t:"Producir el lote 1 de contenido (6 piezas)",
+  why:"Producir en lote ahorra tiempo frente a hacer una pieza por día.",
+  steps:[
+    "Graba 3 videos verticales (sirven para Reels y TikTok).",
+    "Diseña 3 carruseles con las plantillas del manual.",
+    "Escribe los textos y llamados a la acción.",
+    "Programa las publicaciones en Meta Business Suite y TikTok.",
+    "Anota la línea base de cada cuenta (seguidores y alcance)."],
+  out:"6 piezas programadas.",
+  done:"Hay contenido para 2 semanas.",
+  res:["hootIg"] },
+
+{ id:"T36a", f:"f3", o:"MJ", h:4, deps:["T31","T28"],
+  t:"Automatizar propuesta, contrato y anticipo",
+  why:"Dos personas atienden más clientes si los pasos repetidos se hacen solos.",
+  steps:[
+    "Propuesta generada desde la plantilla con los datos del CRM.",
+    "Al aceptarse la propuesta, el contrato sale a firma electrónica.",
+    "Al firmarse, se emite la factura del anticipo y se envía el link de pago.",
+    "El pago confirmado cambia la etapa a Ganado.",
+    "Documenta cada flujo: qué lo dispara, qué hace y quién lo revisa.",
+    "Licencia de n8n: se pueden construir flujos para clientes y cobrar por ellos, pero no revender n8n con marca propia."],
+  out:"Flujo propuesta → contrato → anticipo funcionando.",
+  done:"Una prueba completa con un cliente ficticio pasa sin intervención.",
+  res:["n8n","n8nLic"] },
+
+{ id:"T32", f:"f3", o:"JQ", h:4, deps:["T26","T05"],
+  t:"Mapa del sitio y textos de imperiumlab.co",
+  why:"La web es la vitrina y la primera prueba del Acta de calidad.",
+  steps:[
+    "Páginas: Inicio, Servicios (3 paquetes), Diagnóstico, Acta de calidad, Casos, Nosotras, Contacto y Política de datos.",
+    "Inicio: promesa, prueba (caso), cómo trabajamos (4 semanas) y botón naranja «Agenda tu diagnóstico».",
+    "Textos con el tono del manual.",
+    "SEO: título y descripción por página, y una palabra clave principal por página.",
+    "Preguntas frecuentes."],
+  out:"Mapa del sitio y textos completos.",
+  done:"Textos aprobados por MJ.",
+  res:["gAi"] },
+
+{ id:"T33", f:"f3", o:"JQ", h:6, deps:["T32","T29"],
+  t:"Diseño de la web en Figma",
+  why:"Diseñar antes de programar evita rehacer código.",
+  steps:[
+    "Wireframes pensando primero en celular.",
+    "Interfaz con los tokens del manual v2.",
+    "Componentes reutilizables.",
+    "Estados de foco y de error.",
+    "Prueba de contraste de cada combinación.",
+    "Revisión con MJ y versión final."],
+  out:"Diseño final en Figma.",
+  done:"Todas las páginas diseñadas en celular y escritorio.",
+  res:["wcag"] },
+
+{ id:"T34a", f:"f3", o:"JQ", h:6, deps:["T33"],
+  t:"Maquetar la web (frontend)",
+  why:"Aquí se cumple lo que promete el diferenciador.",
+  steps:[
+    "Framework estático (Astro o Next.js) y repositorio en GitHub.",
+    "HTML semántico: header, nav, main y footer, con un solo h1 por página.",
+    "Imágenes optimizadas (WebP o AVIF) con ancho y alto definidos para evitar saltos (CLS).",
+    "Fuentes con font-display: swap.",
+    "Accesibilidad: textos alternativos, etiquetas en formularios, foco visible y navegación con teclado.",
+    "Datos estructurados JSON-LD (Organization y Service)."],
+  out:"Web maquetada en un entorno de prueba.",
+  done:"Funciona con teclado y en celular.",
+  res:["vitals","wcag","gSchema"] },
+
+{ id:"T34b", f:"f3", o:"MJ", h:6, deps:["T33","T31","T13"],
+  t:"Integraciones: formulario, CRM y pago del diagnóstico",
+  why:"Cada visita interesada debe terminar como lead en el CRM.",
+  steps:[
+    "Formulario de contacto con casilla de autorización de datos → webhook de n8n → lead en el CRM → respuesta automática desde hola@.",
+    "Botón de pago del diagnóstico con la pasarela. Referencia: Wompi 2,65% + COP 700 + IVA; Bold 2,99% + COP 900.",
+    "Webhook de pago aprobado → etapa «Diagnóstico pagado».",
+    "Analítica con aviso de privacidad.",
+    "Prueba de punta a punta con un pago real de bajo valor."],
+  out:"Formulario y pago conectados al CRM.",
+  done:"Un lead de prueba y un pago de prueba llegan al CRM.",
+  res:["wompi","bold","n8n"] },
+
+{ id:"T38", f:"f3", o:"JQ", h:1, deps:["T29"],
+  t:"Perfil de empresa en Google",
+  why:"Aparecer en Google cuando busquen la marca.",
+  steps:[
+    "Créalo como empresa de servicios con la dirección oculta. Google no permite oficinas virtuales.",
+    "Nombre exacto, sin palabras clave agregadas.",
+    "Categorías, horario, logo y portada.",
+    "Enlace a imperiumlab.co.",
+    "Pide la primera reseña a Estancoficial."],
+  out:"Perfil verificado.",
+  done:"El perfil aparece al buscar Imperium Lab.",
+  res:["gbp"] },
+
+{ id:"T39", f:"f3", o:"MJ", h:2, deps:["T34a","T34b","T16"],
+  t:"Publicar imperiumlab.co",
+  why:"Pasar de la prueba al dominio real con seguridad.",
+  steps:[
+    "Hosting estático (por ejemplo Vercel, Netlify o Cloudflare Pages).",
+    "Conecta el dominio y activa HTTPS.",
+    "Cabeceras de seguridad: HSTS, CSP, X-Content-Type-Options: nosniff y Referrer-Policy.",
+    "Si tienen soyimperialtech.com, redirígelo con 301 a imperiumlab.co.",
+    "Verifica el dominio en Google Search Console y envía el sitemap.",
+    "Publica la política de datos."],
+  out:"imperiumlab.co en línea.",
+  done:"La web carga con HTTPS y aparece en Search Console.",
+  res:["owaspH","owasp10","gSitemap"] },
+
+{ id:"T35", f:"f3", o:"AMBAS", h:2, deps:["T39"], gate:true,
+  t:"Pasar el Acta de calidad a imperiumlab.co",
+  why:"Es la puerta de la Fase 3 y el primer caso real del Acta.",
+  steps:[
+    "PageSpeed en celular: LCP ≤ 2,5 s y CLS ≤ 0,1. El INP se mide con datos reales de visitas.",
+    "WCAG 2.2 AA: teclado, lector de pantalla (NVDA o VoiceOver), contraste y tamaño de botones.",
+    "Prueba de resultados enriquecidos de Google.",
+    "Cabeceras de seguridad revisadas.",
+    "Formularios con autorización de datos.",
+    "Corrige lo que falle y guarda las evidencias."],
+  out:"Acta de calidad firmada para imperiumlab.co.",
+  done:"Todos los puntos del Acta en verde.",
+  res:["vitals","wcag","gSchema","owaspH"] },
+
+{ id:"T36b", f:"f3", o:"MJ", h:4, deps:["T34b"],
+  t:"Automatizar onboarding, soporte y reseñas",
+  why:"Completa el recorrido del cliente: el último paso trae al siguiente.",
+  steps:[
+    "Pago confirmado → correo de bienvenida, formulario de accesos y proyecto con tareas desde una plantilla.",
+    "Aviso semanal de avance al cliente.",
+    "Soporte: correo o WhatsApp → ticket registrado.",
+    "Entre 7 y 14 días después del cierre: pedir reseña en Google y un referido.",
+    "Documenta cada flujo."],
+  out:"Recorrido del cliente automatizado.",
+  done:"Una prueba de punta a punta pasa sin intervención.",
+  res:["n8n"] },
+
+{ id:"T43a2", f:"f4", o:"JQ", h:4, deps:["T43b1"],
+  t:"Lote 2: grabar 10 videos diagnóstico",
+  why:"Segundo lote, ajustado con lo que respondió el primero.",
+  steps:[
+    "Revisa qué funcionó en el lote 1 (asunto, duración del video, hallazgos).",
+    "Elige 10 prospectos A o B nuevos.",
+    "Corre PageSpeed y revisa su WhatsApp.",
+    "Graba los 10 videos y enlázalos en el CRM."],
+  out:"10 videos enlazados en el CRM.",
+  done:"MJ puede enviar el lote.",
+  res:[] },
+
+{ id:"T43b2", f:"f4", o:"MJ", h:2, deps:["T43a2"],
+  t:"Lote 2: enviar la secuencia y registrar respuestas",
+  why:"Mantener el ritmo de prospección.",
+  steps:[
+    "Envía el correo 1 dentro del horario permitido.",
+    "Programa los recordatorios de los días 3, 7 y 12.",
+    "Registra respuestas y mueve etapas.",
+    "Compara las métricas con el lote 1."],
+  out:"Lote 2 enviado y medido.",
+  done:"Los 10 tienen estado actualizado.",
+  res:["ley2300"] },
+
+{ id:"T45b", f:"f4", o:"JQ", h:4, deps:["T45a"],
+  t:"Producir el lote 2 de contenido (6 piezas)",
+  why:"Dos semanas más de contenido, con lo aprendido del lote 1.",
+  steps:[
+    "Revisa las métricas del lote 1: reproducciones, guardados y mensajes.",
+    "Repite el formato que mejor funcionó.",
+    "Graba 3 videos y diseña 3 carruseles.",
+    "Programa las publicaciones."],
+  out:"6 piezas programadas.",
+  done:"Hay contenido para 2 semanas más.",
+  res:[] },
+
+{ id:"T48", f:"f4", o:"JQ", h:2, deps:["T45a","T39"],
+  t:"Piloto de anuncios clic a WhatsApp",
+  why:"Es el mismo servicio que venden a SODO: usarlo en casa también lo demuestra.",
+  steps:[
+    "Definan juntas el presupuesto de prueba.",
+    "Requisito: página de Facebook con WhatsApp Business vinculado.",
+    "Un anuncio con el mejor reel del lote 1.",
+    "Segmentación: Bogotá e intereses de la vertical.",
+    "Mensaje automático de bienvenida.",
+    "Midan 2 semanas: costo por conversación y conversaciones que pasan a reunión.",
+    "Quien llega por estos anuncios abre una ventana gratuita de 72 horas de mensajes, según Meta."],
+  out:"Campaña piloto activa.",
+  done:"Hay datos de 2 semanas.",
+  res:["ctwa","waPricing"] },
+
+{ id:"T43a3", f:"f4", o:"JQ", h:4, deps:["T43b2"],
+  t:"Lote 3: grabar 10 videos diagnóstico",
+  why:"Tercer lote para tener datos comparables.",
+  steps:[
+    "Ajusta el guion con lo aprendido.",
+    "Elige 10 prospectos nuevos.",
+    "Graba los 10 videos y enlázalos en el CRM."],
+  out:"10 videos enlazados.",
+  done:"MJ puede enviar el lote.",
+  res:[] },
+
+{ id:"T43b3", f:"f4", o:"MJ", h:2, deps:["T43a3"],
+  t:"Lote 3: enviar la secuencia y registrar respuestas",
+  why:"Cierra la primera ronda de prospección.",
+  steps:[
+    "Envía el correo 1 dentro del horario permitido.",
+    "Programa los recordatorios.",
+    "Registra respuestas y mueve etapas.",
+    "Actualiza el tablero del embudo."],
+  out:"Lote 3 enviado y medido.",
+  done:"30 prospectos contactados en total.",
+  res:[] },
+
+{ id:"T50", f:"f4", o:"AMBAS", h:1, deps:["T43b3","T49","T48"], gate:true,
+  t:"Revisión del embudo y plan de las siguientes 4 semanas",
+  why:"Decidir con datos qué se repite y qué se deja.",
+  steps:[
+    "Revisen las métricas por canal: frío, referidos, alianzas, redes y anuncios.",
+    "Definan qué canal recibe más horas.",
+    "Ajusten mensajes, vertical o precios si hace falta.",
+    "Escriban el plan de las siguientes 4 semanas."],
+  out:"Plan de las siguientes 4 semanas.",
+  done:"Hay plan nuevo acordado.",
+  res:["sparktoro"] }
+];
+
+TASKS.push({ id:"T37", f:"f3", o:"MJ", h:3, deps:["T28"],
+  t:"Kit de verificación del Acta de calidad",
+  why:"El Acta se vende como garantía: necesitan una forma rápida y repetible de medirla en cada proyecto.",
+  steps:[
+    "Rendimiento: PageSpeed Insights o Lighthouse en modo celular. Umbrales: LCP ≤ 2,5 s y CLS ≤ 0,1.",
+    "Accesibilidad: Lighthouse más una extensión como axe DevTools, y revisión manual con teclado y lector de pantalla.",
+    "SEO técnico: prueba de resultados enriquecidos de Google y revisión de sitemap, títulos y descripciones.",
+    "Seguridad: revisión de cabeceras HTTP (HSTS, CSP, nosniff, Referrer-Policy).",
+    "Plantilla del informe: una fila por criterio con resultado, evidencia y fecha.",
+    "Prueba el kit con la web de Estancoficial y guarda el resultado como ejemplo."],
+  out:"Kit de verificación y plantilla de informe.",
+  done:"Medir una web completa toma menos de 1 hora.",
+  res:["vitals","wcag","gSchema","owaspH"] });
+
+const ORDER = ["T01","T02","T20","T03","T04","T06","T05","T07","T08","T21","T09","T22","T10","T23","T11","T16","T12","T13","T14","T24","T15","T25","T17","T18","T26","T30","T31","T27","T28","T29","T42","T47","T40","T37","T41","T32","T49","T36a","T33","T43a1","T43b1","T38","T34a","T34b","T39","T35","T44","T46","T45a","T36b","T43a2","T43b2","T45b","T48","T43a3","T43b3","T50"];
+TASKS.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
+
+if (typeof module !== "undefined") module.exports = { L, PHASES, TASKS };
+
+function isoAdd(iso, n) {
+  const d = new Date(iso + "T12:00:00Z");
+  d.setUTCDate(d.getUTCDate() + n);
+  return d.toISOString().slice(0, 10);
+}
+function dow(iso) { return new Date(iso + "T12:00:00Z").getUTCDay(); }
+function buildDays(start, holidays, count) {
+  const out = []; let cur = start; const hs = new Set(holidays);
+  while (out.length < count) {
+    const w = dow(cur);
+    if (w !== 0 && w !== 6 && !hs.has(cur)) out.push(cur);
+    cur = isoAdd(cur, 1);
+  }
+  return out;
+}
+function runSchedule(tasks, o) {
+  // o: {hpd, startIdx, skip:Set(ids), fixed:{id:sched}}
+  const hpd = o.hpd, res = {};
+  const cur = { MJ: { d: o.startIdx, u: 0 }, JQ: { d: o.startIdx, u: 0 } };
+  const place = (c, earliest, h) => {
+    if (c.d < earliest) { c.d = earliest; c.u = 0; }
+    const sl = []; let rem = h;
+    while (rem > 0) {
+      const take = Math.min(hpd - c.u, rem);
+      sl.push({ d: c.d, h: take });
+      c.u += take; rem -= take;
+      if (c.u >= hpd) { c.d++; c.u = 0; }
+    }
+    return sl;
+  };
+  for (const t of tasks) {
+    if (o.skip && o.skip.has(t.id)) { res[t.id] = o.fixed[t.id]; continue; }
+    let earliest = o.startIdx;
+    for (const dep of (t.deps || [])) {
+      const r = res[dep]; if (!r) continue;
+      const depT = tasks.find(x => x.id === dep);
+      const same = depT && depT.o === t.o && t.o !== "AMBAS";
+      earliest = Math.max(earliest, same ? r.e : r.e + 1);
+    }
+    let slices = [];
+    if (t.o === "AMBAS") {
+      const need = Math.min(t.h, hpd);
+      let day = Math.max(earliest, cur.MJ.d, cur.JQ.d);
+      const cap = (c) => c.d < day ? hpd : (c.d === day ? hpd - c.u : 0);
+      while (cap(cur.MJ) < need || cap(cur.JQ) < need) day++;
+      for (const p of ["MJ", "JQ"]) {
+        const c = cur[p];
+        if (c.d < day) { c.d = day; c.u = 0; }
+        const sl = place(c, day, t.h);
+        sl.forEach(s => slices.push({ ...s, p }));
+      }
+    } else {
+      place(cur[t.o], earliest, t.h).forEach(s => slices.push({ ...s, p: t.o }));
+    }
+    const ds = slices.map(s => s.d);
+    res[t.id] = { slices, s: Math.min(...ds), e: Math.max(...ds) };
+  }
+  return res;
+}
+if (typeof module !== "undefined") module.exports = { isoAdd, dow, buildDays, runSchedule };
+
+</script>
+<script>
+(function () {
+"use strict";
+const KEY = "imperiumlab.plan.v1";
+const THEME_KEY = "imperiumlab.theme";
+const DEFAULT_HOLIDAYS = ["2026-10-12","2026-11-02","2026-11-16","2026-12-08","2026-12-25","2027-01-01","2027-01-11"];
+const STATUS = { pend: "Pendiente", doing: "En curso", block: "Bloqueada", done: "Hecha" };
+const ST_ORDER = ["pend", "doing", "block", "done"];
+const DOW = ["dom","lun","mar","mié","jue","vie","sáb"];
+const DOWL = ["domingo","lunes","martes","miércoles","jueves","viernes","sábado"];
+const MON = ["ene","feb","mar","abr","may","jun","jul","ago","sep","oct","nov","dic"];
+const MONL = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+const PEOPLE = ["MJ", "JQ"];
+const TASK = Object.fromEntries(TASKS.map(t => [t.id, t]));
+const PHASE = Object.fromEntries(PHASES.map(p => [p.id, p]));
+
+function todayISO() {
+  const d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+const TODAY = todayISO();
+
+function defaults() {
+  return {
+    v: 1,
+    names: { MJ: "MJ", JQ: "JQ" },
+    roles: { MJ: "Datos, legal y plataforma", JQ: "Marca, producto y clientes" },
+    start: "2026-10-06", hpd: 2, holidays: DEFAULT_HOLIDAYS.slice(), replan: false,
+    tasks: {}, savedAt: null
+  };
+}
+function merge(base, s) {
+  const out = defaults();
+  if (!s || typeof s !== "object") return out;
+  if (s.names) Object.assign(out.names, s.names);
+  if (s.roles) Object.assign(out.roles, s.roles);
+  if (typeof s.start === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s.start)) out.start = s.start;
+  if ([1, 2, 3, 4].includes(Number(s.hpd))) out.hpd = Number(s.hpd);
+  if (Array.isArray(s.holidays)) out.holidays = s.holidays.filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x));
+  out.replan = !!s.replan;
+  if (s.tasks && typeof s.tasks === "object") {
+    for (const [id, v] of Object.entries(s.tasks)) {
+      if (!TASK[id] || !v) continue;
+      out.tasks[id] = {
+        st: STATUS[v.st] ? v.st : "pend",
+        steps: Array.isArray(v.steps) ? v.steps.map(Boolean) : [],
+        notes: typeof v.notes === "string" ? v.notes : "",
+        doneAt: v.doneAt || ""
+      };
+    }
+  }
+  out.savedAt = s.savedAt || null;
+  return out;
+}
+let storageOK = true;
+function load() {
+  try { const raw = localStorage.getItem(KEY); if (raw) return merge(null, JSON.parse(raw)); }
+  catch (e) { storageOK = false; }
+  return defaults();
+}
+let state = load();
+const ui = { view: "hoy", who: "all", phase: "all", day: null, drawer: null, confirmReset: false };
+
+function hhmm(iso) { const d = new Date(iso); return String(d.getHours()).padStart(2, "0") + ":" + String(d.getMinutes()).padStart(2, "0"); }
+function setSaved(msg, err) { const el = document.getElementById("saved"); if (!el) return; el.textContent = msg; el.classList.toggle("err", !!err); }
+function save() {
+  state.savedAt = new Date().toISOString();
+  try { localStorage.setItem(KEY, JSON.stringify(state)); storageOK = true; setSaved("Guardado " + hhmm(state.savedAt)); }
+  catch (e) { storageOK = false; setSaved("No se guardó en este navegador: usa Exportar en Ajustes", true); }
+}
+let saveTimer = null;
+function saveSoon() { clearTimeout(saveTimer); saveTimer = setTimeout(save, 400); }
+
+function ts(id) {
+  if (!state.tasks[id]) state.tasks[id] = { st: "pend", steps: [], notes: "", doneAt: "" };
+  return state.tasks[id];
+}
+function stOf(id) { return state.tasks[id] ? state.tasks[id].st : "pend"; }
+function stepsDone(id) { const t = TASK[id]; const s = state.tasks[id]; if (!s) return 0; return t.steps.reduce((n, _, i) => n + (s.steps[i] ? 1 : 0), 0); }
+function name(p) { return (state.names[p] || "").trim() || p; }
+function ownerLabel(o) { return o === "AMBAS" ? "Ambas" : name(o); }
+function esc(s) { return String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])); }
+
+/* ---------- schedule ---------- */
+let CAL = null;
+function computeSchedule() {
+  const days = buildDays(state.start, state.holidays, 500);
+  const idx = Object.fromEntries(days.map((d, i) => [d, i]));
+  const base = runSchedule(TASKS, { hpd: state.hpd, startIdx: 0 });
+  let sched = base;
+  if (state.replan) {
+    let ti = days.findIndex(d => d >= TODAY);
+    if (ti > 0) {
+      const skip = new Set(TASKS.filter(t => stOf(t.id) === "done").map(t => t.id));
+      sched = runSchedule(TASKS, { hpd: state.hpd, startIdx: ti, skip, fixed: base });
+    }
+  }
+  CAL = { days, idx, sched };
+}
+function sOf(id) { return CAL.sched[id]; }
+function dStart(id) { return CAL.days[sOf(id).s]; }
+function dEnd(id) { return CAL.days[sOf(id).e]; }
+function isLate(id) { return stOf(id) !== "done" && dEnd(id) < TODAY; }
+function waitingOn(id) { return (TASK[id].deps || []).filter(d => stOf(d) !== "done"); }
+function personTasks(p) { return TASKS.filter(t => t.o === p || t.o === "AMBAS"); }
+
+function fmt(iso) { const d = new Date(iso + "T12:00:00Z"); return DOW[d.getUTCDay()] + " " + d.getUTCDate() + " " + MON[d.getUTCMonth()]; }
+function fmtLong(iso) { const d = new Date(iso + "T12:00:00Z"); return DOWL[d.getUTCDay()] + " " + d.getUTCDate() + " de " + MONL[d.getUTCMonth()]; }
+function range(id) { const a = dStart(id), b = dEnd(id); return a === b ? fmt(a) : fmt(a) + " → " + fmt(b); }
+
+/* ---------- progress ---------- */
+function pctFor(list, p) {
+  let tot = 0, done = 0;
+  for (const t of list) { tot += t.h; if (stOf(t.id) === "done") done += t.h; }
+  return tot ? Math.round(done / tot * 100) : 0;
+}
+function hoursLeft(p) { return personTasks(p).filter(t => stOf(t.id) !== "done").reduce((n, t) => n + t.h, 0); }
+
+/* ---------- toast ---------- */
+let toastTimer = null;
+function toast(msg) {
+  const root = document.getElementById("toastRoot");
+  root.innerHTML = '<div class="toast" role="status">' + esc(msg) + "</div>";
+  clearTimeout(toastTimer); toastTimer = setTimeout(() => { root.innerHTML = ""; }, 2200);
+}
+function copyText(text, okMsg) {
+  const fallback = () => {
+    const ta = document.createElement("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); toast(okMsg); } catch (e) { toast("Selecciona el texto y cópialo"); }
+    ta.remove();
+  };
+  try { navigator.clipboard.writeText(text).then(() => toast(okMsg), fallback); } catch (e) { fallback(); }
+}
+
+/* ---------- actions ---------- */
+function setStatus(id, st) {
+  const s = ts(id); s.st = st;
+  if (st === "done") s.doneAt = TODAY; else s.doneAt = "";
+  save(); refresh();
+  toast(id + " · " + STATUS[st]);
+}
+function toggleStep(id, i, val) {
+  const s = ts(id); const t = TASK[id];
+  while (s.steps.length < t.steps.length) s.steps.push(false);
+  s.steps[i] = val;
+  if (val && s.st === "pend") s.st = "doing";
+  save(); refresh();
+}
+function gcalUrl(id) {
+  const t = TASK[id];
+  const a = dStart(id).replace(/-/g, ""), b = isoAdd(dEnd(id), 1).replace(/-/g, "");
+  const det = [ownerLabel(t.o) + " · " + t.h + " h · " + PHASE[t.f].n + " " + PHASE[t.f].name, "", t.why, "", "Paso a paso:"]
+    .concat(t.steps.map((s, i) => (i + 1) + ". " + s)).concat(["", "Entregable: " + t.out]).join("\n");
+  return "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent(t.id + " · " + t.t) +
+    "&dates=" + a + "/" + b + "&details=" + encodeURIComponent(det);
+}
+function stepsText(id) {
+  const t = TASK[id];
+  return t.id + " · " + t.t + "\n" + ownerLabel(t.o) + " · " + t.h + " h · " + range(id) + "\n\n" +
+    t.steps.map((s, i) => (i + 1) + ". " + s).join("\n") + "\n\nEntregable: " + t.out;
+}
+
+/* ---------- pieces ---------- */
+function ownerChip(o) { return '<span class="chip ' + o + '"><span class="dot ' + o + '"></span>' + esc(ownerLabel(o)) + "</span>"; }
+function pill(st) { return '<span class="pill ' + st + '">' + STATUS[st] + "</span>"; }
+function badges(id) {
+  let h = "";
+  if (TASK[id].gate) h += '<span class="pill gate">Puerta</span>';
+  if (isLate(id)) h += '<span class="pill late">Atrasada</span>';
+  return h;
+}
+function stepsList(id, compact) {
+  const t = TASK[id], s = state.tasks[id];
+  return '<ul class="steps">' + t.steps.map((txt, i) => {
+    const on = s && s.steps[i];
+    return '<li><label><input type="checkbox" data-step="' + id + "|" + i + '"' + (on ? " checked" : "") + "><span>" +
+      '<span class="n">' + (i + 1) + "</span>" + esc(txt) + "</span></label></li>";
+  }).join("") + "</ul>";
+}
+
+/* ---------- summary ---------- */
+function renderSummary() {
+  const done = TASKS.filter(t => stOf(t.id) === "done").length;
+  const pct = pctFor(TASKS);
+  const nextGate = TASKS.find(t => t.gate && stOf(t.id) !== "done");
+  const late = TASKS.filter(t => isLate(t.id)).length;
+  const last = TASKS.reduce((m, t) => dEnd(t.id) > m ? dEnd(t.id) : m, "");
+  const people = PEOPLE.map(p => {
+    const pp = pctFor(personTasks(p));
+    return '<div class="prow"><span class="chip ' + p + '">' + esc(name(p)) + '</span><div class="bar ' + p.toLowerCase() + '"><i style="width:' + pp + '%"></i></div><span class="mono">' + pp + "%</span></div>";
+  }).join("");
+  document.getElementById("summary").innerHTML =
+    '<div class="stat"><div class="lbl">Avance del plan</div><div class="val">' + pct + '%</div><div class="bar"><i style="width:' + pct + '%"></i></div><div class="sub" style="margin-top:6px">' + done + " de " + TASKS.length + " tareas hechas · medido en horas</div></div>" +
+    '<div class="stat"><div class="lbl">Por persona</div><div class="people">' + people + '</div><div class="sub" style="margin-top:6px">Faltan ' + hoursLeft("MJ") + " h de " + esc(name("MJ")) + " y " + hoursLeft("JQ") + " h de " + esc(name("JQ")) + "</div></div>" +
+    '<div class="stat"><div class="lbl">Próxima puerta</div>' + (nextGate
+      ? '<div class="val" style="font-size:18px;margin-top:4px">' + PHASE[nextGate.f].n + " · " + esc(PHASE[nextGate.f].name) + '</div><div class="sub">' + esc(PHASE[nextGate.f].gate) + '</div><div class="sub mono" style="margin-top:4px">Prevista: ' + fmt(dEnd(nextGate.id)) + "</div>"
+      : '<div class="val">Todas</div><div class="sub">Las 5 puertas están cruzadas</div>') + "</div>" +
+    '<div class="stat"><div class="lbl">Ritmo</div><div class="val">' + (late ? '<span style="color:var(--crit)">' + late + " atrasada" + (late > 1 ? "s" : "") + "</span>" : "Al día") + '</div><div class="sub">Fin previsto: ' + (last ? fmt(last) : "—") + "</div><div class=\"sub\">Inicio: " + fmt(state.start) + " · " + state.hpd + " h/día por persona</div></div>";
+}
+
+/* ---------- views ---------- */
+function workdayOnOrAfter(iso) { const d = CAL.days.find(x => x >= iso); return d || CAL.days[0]; }
+function renderHoy() {
+  if (!ui.day) ui.day = workdayOnOrAfter(TODAY < state.start ? state.start : TODAY);
+  const day = ui.day; const di = CAL.idx[day];
+  const isWork = di !== undefined;
+  const per = { MJ: [], JQ: [] };
+  if (isWork) {
+    for (const t of TASKS) {
+      for (const s of sOf(t.id).slices) if (s.d === di) per[s.p].push({ t, h: s.h });
+    }
+  }
+  let head = '<div class="toolbar"><h2>Qué toca ' + (day === TODAY ? "hoy" : "este día") + '</h2><div class="daynav">' +
+    '<button class="btn sm" data-act="dayprev" aria-label="Día laboral anterior">‹</button>' +
+    '<span class="d">' + fmtLong(day) + "</span>" +
+    '<button class="btn sm" data-act="daynext" aria-label="Día laboral siguiente">›</button>' +
+    '<button class="btn sm" data-act="daytoday">Hoy</button></div></div>';
+  if (TODAY < state.start && day === CAL.days[0]) head += '<p class="note" style="margin:0 0 14px">El plan arranca el ' + fmtLong(state.start) + ". Esto es lo que toca ese día.</p>";
+  if (!isWork) head += '<p class="note warn" style="margin:0 0 14px">Este día no es laboral en el plan (fin de semana, festivo o antes del inicio).</p>';
+  const cols = PEOPLE.map(p => {
+    const other = PEOPLE.find(x => x !== p);
+    const blocks = per[p];
+    const hrs = blocks.reduce((n, b) => n + b.h, 0);
+    let body;
+    if (!blocks.length) {
+      const nxt = personTasks(p).find(t => stOf(t.id) !== "done" && dStart(t.id) > day);
+      body = '<div class="empty">Sin tarea asignada este día. Adelanta tu siguiente tarea o apoya a ' + esc(name(other)) + "." +
+        (nxt && isWork ? '<div style="margin-top:10px"><button class="btn sm" data-open="' + nxt.id + '">Siguiente: ' + nxt.id + " · " + esc(nxt.t) + "</button></div>" : "") + "</div>";
+    } else {
+      body = '<div class="blocks">' + blocks.map(({ t, h }) => {
+        const mine = [...new Set(sOf(t.id).slices.filter(s => s.p === p).map(s => s.d))];
+        const k = mine.indexOf(di) + 1;
+        const wait = waitingOn(t.id);
+        const st = stOf(t.id);
+        return '<article class="block"><div class="block-h"><span class="hrs-chip">' + h + ' h</span><span class="tid">' + t.id + "</span>" +
+          '<span class="chip">' + PHASE[t.f].n + " · " + esc(PHASE[t.f].name) + "</span>" + pill(st) + badges(t.id) +
+          (mine.length > 1 ? '<span class="chip">Sesión ' + k + " de " + mine.length + "</span>" : "") +
+          (t.o === "AMBAS" ? '<span class="chip AMBAS">Con ' + esc(name(other)) + "</span>" : "") + "</div>" +
+          "<h3>" + esc(t.t) + '</h3><p class="why">' + esc(t.why) + "</p>" + stepsList(t.id) +
+          '<div class="block-f">' + (wait.length ? '<span class="wait">Espera: ' + wait.join(", ") + "</span>" : "") +
+          '<button class="btn sm" data-open="' + t.id + '">Ver detalle</button>' +
+          (st === "pend" ? '<button class="btn sm" data-status="' + t.id + '|doing">Empezar</button>' : "") +
+          (st !== "done" ? '<button class="btn sm primary" data-status="' + t.id + '|done">Marcar hecha</button>' : '<span class="pill done">Hecha</span>') +
+          "</div></article>";
+      }).join("") + "</div>";
+    }
+    return '<section class="col ' + p + '"><div class="col-h"><div><div class="who">' + esc(name(p)) + '</div><div class="role">' + esc(state.roles[p] || "") + '</div></div><div class="hrs">' + hrs + " h</div></div>" + body + "</section>";
+  }).join("");
+  return head + '<div class="cols">' + cols + "</div>";
+}
+
+function filters(withPhase) {
+  const segs = [["all", "Todas"], ["MJ", name("MJ")], ["JQ", name("JQ")]]
+    .map(([k, l]) => '<button data-who="' + k + '" aria-pressed="' + (ui.who === k) + '">' + esc(l) + "</button>").join("");
+  let ph = "";
+  if (withPhase) ph = '<label class="muted" style="font-size:13px">Fase <select id="phaseSel" class="btn sm" style="padding:4px 6px">' +
+    '<option value="all">Todas</option>' + PHASES.map(p => '<option value="' + p.id + '"' + (ui.phase === p.id ? " selected" : "") + ">" + p.n + " · " + esc(p.name) + "</option>").join("") + "</select></label>";
+  return '<div class="seg" role="group" aria-label="Filtrar por persona">' + segs + "</div>" + ph;
+}
+function matchWho(t) { return ui.who === "all" || t.o === ui.who || t.o === "AMBAS"; }
+
+function renderTablero() {
+  const list = TASKS.filter(t => matchWho(t) && (ui.phase === "all" || t.f === ui.phase));
+  const cols = ST_ORDER.map(st => {
+    const items = list.filter(t => stOf(t.id) === st).sort((a, b) => sOf(a.id).s - sOf(b.id).s);
+    return '<section class="kcol" data-drop="' + st + '"><div class="kcol-h">' + pill(st) + '<span class="c">' + items.length + '</span></div><div class="kcards">' +
+      items.map(t => {
+        const n = stepsDone(t.id), p = Math.round(n / t.steps.length * 100);
+        return '<button class="card" draggable="true" data-drag="' + t.id + '" data-open="' + t.id + '">' +
+          '<div class="meta"><span class="tid">' + t.id + "</span>" + ownerChip(t.o) + badges(t.id) + '</div><div class="t">' + esc(t.t) + "</div>" +
+          '<div class="meta"><span class="mono">' + range(t.id) + "</span><span>· " + t.h + " h</span><span>· " + n + "/" + t.steps.length + ' pasos</span></div><div class="mini"><i style="width:' + p + '%"></i></div></button>';
+      }).join("") + "</div></section>";
+  }).join("");
+  return '<div class="toolbar"><h2>Tablero</h2>' + filters(true) + '</div><p class="muted" style="margin:-4px 0 12px;font-size:13px">Arrastra una tarjeta para cambiar su estado, o ábrela para ver el paso a paso.</p><div class="kanban">' + cols + "</div>";
+}
+
+function renderCrono() {
+  const who = ui.who === "all" ? PEOPLE : [ui.who];
+  const lastIdx = Math.max(...TASKS.map(t => sOf(t.id).e));
+  const lastDay = CAL.days[lastIdx];
+  const per = {};
+  for (const t of TASKS) for (const s of sOf(t.id).slices) {
+    const key = s.p + "|" + s.d; (per[key] = per[key] || []).push({ t, h: s.h });
+  }
+  let mon = state.start; while (dow(mon) !== 1) mon = isoAdd(mon, -1);
+  const weeks = []; let wn = 1;
+  while (mon <= lastDay) {
+    const dates = [0, 1, 2, 3, 4].map(i => isoAdd(mon, i));
+    const gates = TASKS.filter(t => t.gate && dates.includes(dEnd(t.id)));
+    let grid = '<div class="hd"></div>' + dates.map(d => '<div class="hd' + (d === TODAY ? " today" : "") + '">' + fmt(d) + "</div>").join("");
+    for (const p of who) {
+      grid += '<div class="rowlbl"><span class="dot ' + p + '"></span>' + esc(name(p)) + "</div>";
+      for (const d of dates) {
+        const di = CAL.idx[d];
+        if (di === undefined) { grid += '<div class="off">' + (state.holidays.includes(d) ? "Festivo" : (d < state.start ? "Antes del inicio" : "")) + "</div>"; continue; }
+        const items = per[p + "|" + di] || [];
+        grid += '<div class="cell' + (d === TODAY ? " today" : "") + '">' + items.map(({ t, h }) =>
+          '<button class="tchip ' + t.o + (stOf(t.id) === "done" ? " done" : "") + (isLate(t.id) ? " late" : "") + '" data-open="' + t.id + '"><b>' + t.id + " · " + h + " h" + (t.gate ? " · ◆" : "") + "</b><span>" + esc(t.t) + "</span></button>").join("") + "</div>";
+      }
+    }
+    const thisWeek = TODAY >= mon && TODAY <= isoAdd(mon, 6);
+    weeks.push('<section class="week"' + (thisWeek ? ' id="thisweek"' : "") + '><div class="week-h"><h3>Semana ' + wn + '</h3><span class="r">' + fmt(dates[0]) + " a " + fmt(dates[4]) + "</span>" +
+      (gates.length ? '<span class="g">' + gates.map(g => '<span class="pill gate">◆ Puerta ' + PHASE[g.f].n + "</span>").join(" ") + "</span>" : "") +
+      '</div><div class="gridwrap"><div class="wgrid">' + grid + "</div></div></section>");
+    mon = isoAdd(mon, 7); wn++;
+  }
+  return '<div class="toolbar"><h2>Cronograma</h2>' + filters(false) + '</div><p class="muted" style="margin:-4px 0 12px;font-size:13px">Cada bloque es una sesión de trabajo. ◆ marca una puerta de fase. Los festivos se ajustan en Ajustes.</p><div class="weeks">' + weeks.join("") + "</div>";
+}
+
+function renderFases() {
+  return '<div class="toolbar"><h2>Fases y puertas</h2>' + filters(false) + '</div><div class="phases">' + PHASES.map(p => {
+    const all = TASKS.filter(t => t.f === p.id);
+    const list = all.filter(matchWho);
+    const pct = pctFor(all);
+    const gateT = all.find(t => t.gate);
+    const gateOk = gateT && stOf(gateT.id) === "done";
+    const s = Math.min(...all.map(t => sOf(t.id).s)), e = Math.max(...all.map(t => sOf(t.id).e));
+    const done = all.filter(t => stOf(t.id) === "done").length;
+    return '<section class="phase"><div class="phase-h"><div><div class="n">' + p.n + " · " + fmt(CAL.days[s]) + " a " + fmt(CAL.days[e]) + "</div><h3>" + esc(p.name) + '</h3></div><div class="pct">' + pct + '%</div></div>' +
+      '<div class="bar"><i style="width:' + pct + '%"></i></div>' +
+      '<div class="gate"><span class="diamond' + (gateOk ? " ok" : "") + '"></span><span><strong>Puerta:</strong> ' + esc(p.gate) + (gateT ? " (" + gateT.id + ")" : "") + '</span><span class="muted" style="margin-left:auto">' + done + "/" + all.length + " tareas</span></div>" +
+      '<div class="tlist">' + list.map(t => '<button class="trow" data-open="' + t.id + '"><span class="tid">' + t.id + '</span><span class="t">' + esc(t.t) + " " + badges(t.id) + "</span>" + ownerChip(t.o) + '<span class="dates mono">' + range(t.id) + "</span></button>").join("") + "</div></section>";
+  }).join("") + "</div>";
+}
+
+/* ---------- marca ---------- */
+function lum(hex) {
+  const h = hex.replace("#", ""); const c = [0, 2, 4].map(i => parseInt(h.slice(i, i + 2), 16) / 255)
+    .map(v => v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4));
+  return 0.2126 * c[0] + 0.7152 * c[1] + 0.0722 * c[2];
+}
+function ratio(a, b) { const x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+function verdict(r) { return r >= 4.5 ? '<span class="ok">AA</span>' : r >= 3 ? '<span class="mid">Solo grande</span>' : '<span class="bad">No pasa</span>'; }
+const PALETTE = [
+  ["Violeta", "#7B5CFF", "Principal (30%). Botones, enlaces, títulos, ícono."],
+  ["Azul", "#3B9EFF", "Apoyo. Confianza para clientes comerciales."],
+  ["Turquesa", "#2DD4BF", "Apoyo. Degradado en banners y detalles."],
+  ["Magenta", "#E85CD8", "Apoyo. Degradado, energía y modernidad."],
+  ["Negro violáceo", "#0D0D12", "Fondos oscuros donde el logo debe brillar."],
+  ["Naranja", "#FF6B35", "Solo botones de acción (Comprar, Contáctanos)."]
+];
+const CHANGES = [
+  ["Nombre y dominio: «Imperial Tech» y «soyimperialtech.com» pasan a «Imperium Lab» e «imperiumlab.co».", ["T26"]],
+  ["Logo: conservar la corona de tres formas y la «I» central, que ahora es la de Imperium. Nuevo wordmark, versiones y tamaño mínimo.", ["T22", "T23", "T24"]],
+  ["Pilar 2 «herramientas no-code»: choca con el diferenciador de webs hechas con buenas prácticas verificables.", ["T20", "T26"]],
+  ["Promesa con la IA al centro: replantear como «la IA es una herramienta; cada sitio lo revisa y prueba una persona».", ["T21", "T26"]],
+  ["Misión y posicionamiento («micronegocios que no pueden pagar una agencia»): alinear con la vertical y los precios decididos.", ["T04", "T05", "T26"]],
+  ["Contraste: violeta con texto blanco 4,36:1 y naranja con texto blanco 2,84:1 no pasan WCAG AA para texto normal.", ["T25"]],
+  ["Tipografía: el manual describe el estilo pero no nombra las familias.", ["T25"]],
+  ["Tono: el manual menciona «vos» en redes; definir tú o usted para el público de Bogotá.", ["T21"]],
+  ["Faltan secciones: usos del logo, área de respeto, iconografía, fotografía, componentes web y plantillas.", ["T27", "T28"]]
+];
+function renderMarca() {
+  const sw = PALETTE.map(([n, hex, use]) => {
+    const rw = ratio(hex, "#FFFFFF"), rd = ratio(hex, "#0D0D12");
+    const best = rw >= rd ? "#FFFFFF" : "#0D0D12";
+    return '<div class="sw"><div class="c" style="background:' + hex + '"><span style="background:' + best + ";color:" + hex + '">' + hex + '</span></div><div class="b"><strong>' + n + "</strong><span class=\"muted\">" + esc(use) + "</span>" +
+      '<div class="cr"><span>Texto blanco encima</span><span class="mono">' + rw.toFixed(2) + ":1 " + verdict(rw) + "</span></div>" +
+      '<div class="cr"><span>Texto #0D0D12 encima</span><span class="mono">' + rd.toFixed(2) + ":1 " + verdict(rd) + "</span></div>" +
+      '<button class="btn sm" data-copy="' + hex + '">Copiar ' + hex + "</button></div></div>";
+  }).join("");
+  const pairs = [
+    ["#FF6B35", "#FFFFFF", "Agenda tu diagnóstico", "Actual: naranja con texto blanco"],
+    ["#FF6B35", "#0D0D12", "Agenda tu diagnóstico", "Propuesta: naranja con texto oscuro"],
+    ["#7B5CFF", "#FFFFFF", "Ver servicios", "Actual: violeta con texto blanco"],
+    ["#6A4BF0", "#FFFFFF", "Ver servicios", "Propuesta: violeta un tono más oscuro"],
+    ["#0D0D12", "#9D86FF", "Ver servicios", "Propuesta en fondo oscuro: violeta claro"]
+  ].map(([bg, fg, txt, lbl]) => {
+    const r = ratio(bg, fg);
+    return '<div class="pair"><span class="demo" style="background:' + bg + ";color:" + fg + '">' + txt + "</span><span>" + lbl + '</span><span class="mono">' + r.toFixed(2) + ":1 " + verdict(r) + "</span></div>";
+  }).join("");
+  const changes = CHANGES.map(([txt, ids]) => "<li>" + esc(txt) + " " + ids.map(id => '<button class="btn sm ghost" data-open="' + id + '">' + id + "</button>").join("") + "</li>").join("");
+  return '<div class="toolbar"><h2>Marca: qué hay hoy y qué cambia</h2></div>' +
+    '<p class="note" style="margin:0 0 14px">Esta paleta sale del manual actual de Imperial Tech (regla 60-30-10: 60% neutros, 30% violeta, 10% degradado). El contraste se calcula con la fórmula de WCAG: AA pide 4,5:1 para texto normal y 3:1 para texto grande.</p>' +
+    '<div class="swatches">' + sw + "</div>" +
+    '<div class="two" style="margin-top:16px"><div class="panel"><h3>Qué cambia en el manual</h3><ol class="changes">' + changes + "</ol></div>" +
+    '<div class="panel"><h3>Botones: actual frente a propuesta</h3><div class="pairs">' + pairs + "</div>" +
+    '<h3 style="margin-top:16px">Se conserva</h3><ul class="changes"><li>La regla 60-30-10 y el degradado solo en acentos.</li><li>El naranja reservado para botones de acción.</li><li>El significado de las tres formas: presencia, automatización y crecimiento.</li><li>Los eslóganes, si siguen encajando con la promesa nueva (se revisan en T26).</li></ul></div></div>';
+}
+
+/* ---------- ajustes ---------- */
+function renderAjustes() {
+  const last = state.savedAt ? "Último guardado: " + new Date(state.savedAt).toLocaleString("es-CO") : "Aún no hay cambios guardados.";
+  return '<div class="toolbar"><h2>Ajustes</h2></div><div class="form">' +
+    '<p class="note' + (storageOK ? "" : " warn") + '" style="margin:0">' + (storageOK
+      ? "El progreso se guarda solo en este navegador y en este computador. " + esc(last)
+      : "Este navegador no permite guardar (por ejemplo, ventana privada). Exporta el progreso antes de cerrar.") +
+    ' Para trabajar las dos sobre el mismo avance: una exporta el archivo, lo sube a Google Drive y la otra lo importa.</p>' +
+    '<div class="row2"><div class="field"><label for="nMJ">Nombre de MJ</label><input id="nMJ" data-set="names.MJ" value="' + esc(state.names.MJ) + '"><span class="hint">Datos, legal y plataforma</span></div>' +
+    '<div class="field"><label for="nJQ">Nombre de JQ</label><input id="nJQ" data-set="names.JQ" value="' + esc(state.names.JQ) + '"><span class="hint">Marca, producto y clientes</span></div></div>' +
+    '<div class="row2"><div class="field"><label for="start">Fecha de inicio</label><input type="date" id="start" data-set="start" value="' + state.start + '"></div>' +
+    '<div class="field"><label for="hpd">Horas al día por persona</label><select id="hpd" data-set="hpd">' + [1, 2, 3, 4].map(n => '<option value="' + n + '"' + (n === state.hpd ? " selected" : "") + ">" + n + " h</option>").join("") + "</select></div></div>" +
+    '<div class="field"><label for="hol">Festivos (uno por línea, AAAA-MM-DD)</label><textarea id="hol" data-set="holidays">' + esc(state.holidays.join("\n")) + '</textarea><span class="hint">Festivos de Colombia calculados para oct 2026 a ene 2027. Verifíquenlos con el calendario oficial.</span></div>' +
+    '<label class="switch"><input type="checkbox" id="replan" data-set="replan"' + (state.replan ? " checked" : "") + '><span><strong>Reprogramar lo pendiente desde hoy</strong><br><span class="muted">Si se atrasan, las tareas no hechas se recalculan a partir de hoy. Las hechas conservan su fecha.</span></span></label>' +
+    '<div class="field"><label>Copia de seguridad</label><div style="display:flex;gap:8px;flex-wrap:wrap">' +
+    '<button class="btn primary" data-act="export">Exportar progreso (.json)</button>' +
+    '<label class="btn" for="importFile">Importar progreso</label><input type="file" id="importFile" accept="application/json,.json" hidden>' +
+    '<button class="btn" data-act="copyweek">Copiar resumen de la semana</button>' +
+    '<button class="btn danger" data-act="reset">Borrar todo el progreso</button></div>' +
+    (ui.confirmReset ? '<div class="confirm" style="margin-top:8px">¿Borrar estados, pasos y notas de las ' + TASKS.length + ' tareas? No se puede deshacer. <button class="btn sm danger" data-act="resetyes">Sí, borrar</button><button class="btn sm" data-act="resetno">Cancelar</button></div>' : "") +
+    "</div></div>";
+}
+
+/* ---------- drawer ---------- */
+function renderDrawer() {
+  const root = document.getElementById("drawerRoot");
+  if (!ui.drawer) { root.innerHTML = ""; return; }
+  const t = TASK[ui.drawer]; const s = ts(t.id); const st = s.st;
+  const n = stepsDone(t.id);
+  const slices = sOf(t.id).slices;
+  const byDay = {};
+  slices.forEach(x => { const k = CAL.days[x.d]; byDay[k] = byDay[k] || []; byDay[k].push(x.p); });
+  const sessions = Object.entries(byDay).map(([d, ps]) => fmt(d) + " (" + [...new Set(ps)].map(name).join(" y ") + ")").join(" · ");
+  const deps = (t.deps || []).map(d => '<button data-open="' + d + '"><span class="dot ' + TASK[d].o + '"></span>' + d + " · " + STATUS[stOf(d)] + "</button>").join("");
+  const after = TASKS.filter(x => (x.deps || []).includes(t.id)).map(x => '<button data-open="' + x.id + '"><span class="dot ' + x.o + '"></span>' + x.id + "</button>").join("");
+  const prevBody = root.querySelector(".dr-b"); const prevScroll = prevBody ? prevBody.scrollTop : 0;
+  const anim = ui.justOpened ? " anim" : ""; ui.justOpened = false;
+  const res = t.res.map(k => L[k] ? '<li><a href="' + L[k][1] + '" target="_blank" rel="noopener">' + esc(L[k][0]) + "</a></li>" : "").join("");
+  root.innerHTML = '<div class="scrim" data-act="close"></div><aside class="drawer' + anim + '" role="dialog" aria-modal="true" aria-labelledby="drTitle">' +
+    '<div class="dr-h"><div class="dr-top"><span class="tid">' + t.id + '</span><span class="chip">' + PHASE[t.f].n + " · " + esc(PHASE[t.f].name) + "</span>" + ownerChip(t.o) + badges(t.id) +
+    '<button class="btn iconbtn ghost x" data-act="close" aria-label="Cerrar">✕</button></div><h2 id="drTitle">' + esc(t.t) + "</h2>" +
+    '<div class="statuses" role="group" aria-label="Estado">' + ST_ORDER.map(k => '<button class="' + k + '" data-status="' + t.id + "|" + k + '" aria-pressed="' + (st === k) + '">' + STATUS[k] + "</button>").join("") + "</div></div>" +
+    '<div class="dr-b">' +
+    '<div class="sec"><h4>Por qué</h4><p>' + esc(t.why) + "</p></div>" +
+    '<div class="sec"><dl class="kv"><dt>Responsable</dt><dd>' + esc(ownerLabel(t.o)) + (t.o === "AMBAS" ? " (sesión conjunta)" : "") + "</dd><dt>Esfuerzo</dt><dd>" + t.h + " h" + (t.o === "AMBAS" ? " cada una" : "") + "</dd><dt>Fechas</dt><dd class=\"mono\">" + range(t.id) + "</dd><dt>Sesiones</dt><dd>" + sessions + "</dd></dl></div>" +
+    '<div class="sec"><h4>Paso a paso · ' + n + " de " + t.steps.length + "</h4>" + stepsList(t.id) +
+    (n === t.steps.length && st !== "done" ? '<div style="margin-top:8px"><button class="btn primary" data-status="' + t.id + '|done">Todos los pasos listos: marcar hecha</button></div>' : "") + "</div>" +
+    '<div class="sec"><h4>Entregable</h4><p>' + esc(t.out) + '</p></div><div class="sec"><h4>Listo cuando</h4><p>' + esc(t.done) + "</p></div>" +
+    (deps ? '<div class="sec"><h4>Necesita antes</h4><div class="deps">' + deps + "</div></div>" : "") +
+    (after ? '<div class="sec"><h4>Desbloquea</h4><div class="deps">' + after + "</div></div>" : "") +
+    (res ? '<div class="sec"><h4>Fuentes y recursos</h4><ul class="res">' + res + "</ul></div>" : "") +
+    '<div class="sec"><h4>Notas</h4><textarea class="notes" id="notes" data-notes="' + t.id + '" placeholder="Decisiones, enlaces, pendientes…">' + esc(s.notes || "") + "</textarea></div>" +
+    '<div class="sec" style="display:flex;gap:8px;flex-wrap:wrap"><a class="btn" href="' + gcalUrl(t.id) + '" target="_blank" rel="noopener">Agregar a Google Calendar</a><button class="btn" data-copysteps="' + t.id + '">Copiar paso a paso</button></div>' +
+    "</div></aside>";
+  const nb = root.querySelector(".dr-b"); if (nb && !anim) nb.scrollTop = prevScroll;
+  const x = root.querySelector(".x"); if (x && !root.dataset.focused) { x.focus(); root.dataset.focused = "1"; }
+}
+function openTask(id) { ui.drawer = id; ui.justOpened = true; document.getElementById("drawerRoot").dataset.focused = ""; renderDrawer(); }
+function closeDrawer() { ui.drawer = null; renderDrawer(); }
+
+/* ---------- main render ---------- */
+function render() {
+  document.querySelectorAll(".tab").forEach(b => b.setAttribute("aria-selected", String(b.dataset.view === ui.view)));
+  const v = document.getElementById("view");
+  const fn = { hoy: renderHoy, tablero: renderTablero, crono: renderCrono, fases: renderFases, marca: renderMarca, ajustes: renderAjustes }[ui.view];
+  v.innerHTML = fn();
+  document.getElementById("subtitle").textContent = name("MJ") + " y " + name("JQ") + " · " + state.hpd + " h al día cada una · desde " + fmt(state.start);
+}
+function refresh() { computeSchedule(); renderSummary(); render(); renderDrawer(); }
+
+/* ---------- events ---------- */
+document.addEventListener("click", e => {
+  const el = e.target.closest("[data-open],[data-status],[data-act],[data-who],[data-copy],[data-copysteps],.tab");
+  if (!el) return;
+  if (el.classList.contains("tab")) { ui.view = el.dataset.view; render(); if (ui.view === "crono") { const w = document.getElementById("thisweek"); if (w) w.scrollIntoView({ block: "start" }); } return; }
+  if (el.dataset.status) { const [id, st] = el.dataset.status.split("|"); setStatus(id, st); return; }
+  if (el.dataset.open) { e.preventDefault(); openTask(el.dataset.open); return; }
+  if (el.dataset.who) { ui.who = el.dataset.who; render(); return; }
+  if (el.dataset.copy) { copyText(el.dataset.copy, "Copiado " + el.dataset.copy); return; }
+  if (el.dataset.copysteps) { copyText(stepsText(el.dataset.copysteps), "Paso a paso copiado"); return; }
+  const a = el.dataset.act;
+  if (a === "close") closeDrawer();
+  else if (a === "dayprev" || a === "daynext") {
+    const i = CAL.days.findIndex(d => d >= ui.day);
+    const cur = CAL.days[i] === ui.day ? i : (a === "dayprev" ? i : i - 1);
+    const ni = Math.max(0, cur + (a === "daynext" ? 1 : -1));
+    ui.day = CAL.days[ni]; render();
+  }
+  else if (a === "daytoday") { ui.day = workdayOnOrAfter(TODAY < state.start ? state.start : TODAY); render(); }
+  else if (a === "export") exportJSON();
+  else if (a === "copyweek") copyText(weekSummary(), "Resumen copiado");
+  else if (a === "reset") { ui.confirmReset = true; render(); }
+  else if (a === "resetno") { ui.confirmReset = false; render(); }
+  else if (a === "resetyes") { const keep = { names: state.names, roles: state.roles, start: state.start, hpd: state.hpd, holidays: state.holidays }; state = Object.assign(defaults(), keep); ui.confirmReset = false; save(); refresh(); toast("Progreso borrado"); }
+});
+document.addEventListener("change", e => {
+  const el = e.target;
+  if (el.dataset.step) { const [id, i] = el.dataset.step.split("|"); toggleStep(id, Number(i), el.checked); return; }
+  if (el.id === "phaseSel") { ui.phase = el.value; render(); return; }
+  if (el.id === "importFile" && el.files && el.files[0]) { importJSON(el.files[0]); el.value = ""; return; }
+  if (el.dataset.set) {
+    const k = el.dataset.set;
+    if (k === "names.MJ" || k === "names.JQ") state.names[k.split(".")[1]] = el.value.slice(0, 40);
+    else if (k === "start") { if (/^\d{4}-\d{2}-\d{2}$/.test(el.value)) { state.start = el.value; ui.day = null; } }
+    else if (k === "hpd") state.hpd = Number(el.value);
+    else if (k === "holidays") state.holidays = el.value.split(/\s+/).filter(x => /^\d{4}-\d{2}-\d{2}$/.test(x));
+    else if (k === "replan") state.replan = el.checked;
+    save(); computeSchedule(); renderSummary();
+    document.getElementById("subtitle").textContent = name("MJ") + " y " + name("JQ") + " · " + state.hpd + " h al día cada una · desde " + fmt(state.start);
+    toast("Ajuste guardado");
+  }
+});
+document.addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.notes) { ts(el.dataset.notes).notes = el.value; saveSoon(); }
+});
+document.addEventListener("keydown", e => { if (e.key === "Escape" && ui.drawer) closeDrawer(); });
+let dragId = null;
+document.addEventListener("dragstart", e => { const c = e.target.closest("[data-drag]"); if (!c) return; dragId = c.dataset.drag; try { e.dataTransfer.setData("text/plain", dragId); e.dataTransfer.effectAllowed = "move"; } catch (x) {} });
+document.addEventListener("dragover", e => { const col = e.target.closest("[data-drop]"); if (!col || !dragId) return; e.preventDefault(); document.querySelectorAll(".kcol.over").forEach(x => x !== col && x.classList.remove("over")); col.classList.add("over"); });
+document.addEventListener("dragleave", e => { const col = e.target.closest("[data-drop]"); if (col && !col.contains(e.relatedTarget)) col.classList.remove("over"); });
+document.addEventListener("drop", e => { const col = e.target.closest("[data-drop]"); if (!col || !dragId) return; e.preventDefault(); const id = dragId; dragId = null; if (stOf(id) !== col.dataset.drop) setStatus(id, col.dataset.drop); else render(); });
+document.addEventListener("dragend", () => { dragId = null; document.querySelectorAll(".kcol.over").forEach(x => x.classList.remove("over")); });
+
+/* ---------- export / import ---------- */
+function exportJSON() {
+  const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "imperium-lab-progreso-" + TODAY + ".json";
+  document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  toast("Archivo exportado");
+}
+function importJSON(file) {
+  const r = new FileReader();
+  r.onload = () => {
+    try { const s = JSON.parse(r.result); if (!s || s.v !== 1) throw new Error("v"); state = merge(null, s); save(); ui.day = null; refresh(); toast("Progreso importado"); }
+    catch (e) { toast("Ese archivo no es un progreso de este plan"); }
+  };
+  r.readAsText(file);
+}
+function weekSummary() {
+  let mon = TODAY; while (dow(mon) !== 1) mon = isoAdd(mon, -1);
+  const dates = [0, 1, 2, 3, 4].map(i => isoAdd(mon, i));
+  const lines = ["Imperium Lab · semana del " + fmt(dates[0]) + " · avance " + pctFor(TASKS) + "%"];
+  for (const p of PEOPLE) {
+    lines.push("", name(p) + ":");
+    const seen = new Set();
+    for (const d of dates) { const di = CAL.idx[d]; if (di === undefined) continue;
+      for (const t of personTasks(p)) if (!seen.has(t.id) && sOf(t.id).slices.some(s => s.d === di && s.p === p)) { seen.add(t.id); lines.push("- " + t.id + " " + t.t + " · " + STATUS[stOf(t.id)]); } }
+    if (!seen.size) lines.push("- Sin tareas asignadas");
+  }
+  const late = TASKS.filter(t => isLate(t.id));
+  if (late.length) lines.push("", "Atrasadas: " + late.map(t => t.id).join(", "));
+  return lines.join("\n");
+}
+
+/* ---------- theme ---------- */
+function applyTheme(t) { if (t === "dark" || t === "light") document.documentElement.setAttribute("data-theme", t); else document.documentElement.removeAttribute("data-theme"); }
+let theme = null; try { theme = localStorage.getItem(THEME_KEY); } catch (e) {}
+applyTheme(theme);
+document.getElementById("themeBtn").addEventListener("click", () => {
+  const cur = document.documentElement.getAttribute("data-theme") || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  const next = cur === "dark" ? "light" : "dark"; applyTheme(next); try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
+});
+
+/* ---------- boot ---------- */
+if (state.savedAt) setSaved("Guardado " + hhmm(state.savedAt)); else if (!storageOK) setSaved("Este navegador no guarda: usa Exportar", true);
+refresh();
+})();
+
+</script>
+</body>
+</html>
