@@ -1,0 +1,16 @@
+# Cabeceras de seguridad para Cloudflare Pages (este archivo no se publica como recurso).
+# Formato: https://developers.cloudflare.com/pages/configuration/headers/
+/*
+  Content-Security-Policy: default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://zvlyvjgbqswfmlqhkgim.supabase.co wss://zvlyvjgbqswfmlqhkgim.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: no-referrer
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+  Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  X-Robots-Tag: noindex, nofollow
+
+# Que el navegador pregunte siempre por la versión nueva de la configuración.
+/js/config.js
+  Cache-Control: no-cache

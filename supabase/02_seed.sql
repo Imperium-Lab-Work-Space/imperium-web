@@ -1,4 +1,4 @@
--- Generado por scripts/generar-seed.js desde js/data.js. No editar a mano.
+-- Generado por scripts/generar-seed.js desde public/js/data.js. No editar a mano.
 begin;
 
 insert into public.fuentes (clave, titulo, url) values

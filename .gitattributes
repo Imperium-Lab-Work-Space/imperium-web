@@ -1,2 +1,2 @@
-# La librería lleva hash SRI en index.html: Git no debe tocar sus saltos de línea.
-js/vendor/** -text
+# La librería lleva hash SRI en public/index.html: Git no debe tocar sus saltos de línea.
+public/js/vendor/** -text

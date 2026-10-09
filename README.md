@@ -3,17 +3,19 @@ Repositorio principal para el sitio web y la plataforma de Imperium Lab.
 
 ## Estructura
 
+Solo la carpeta `public/` se publica. Lo demás (SQL, scripts, versión vieja) no sale a internet.
+
 | Ruta | Contenido |
 |---|---|
-| `index.html` | Estructura de la página y pantallas de acceso |
-| `css/styles.css` · `css/auth.css` | Estilos de la app y del login |
-| `js/config.js` | URL y clave publishable de Supabase |
-| `js/auth.js` | Login, verificación en dos pasos, recuperación, cierre por inactividad |
-| `js/data.js` · `js/scheduler.js` · `js/app.js` | Contenido del plan, cálculo del cronograma e interfaz |
-| `js/vendor/` | `@supabase/supabase-js` 2.117.2 servido localmente (sin CDN) con hash SRI |
+| `public/index.html` | Estructura de la página y pantallas de acceso |
+| `public/_headers` | Cabeceras de seguridad HTTP (Cloudflare Pages) |
+| `public/css/` | Estilos de la app y del login |
+| `public/js/config.js` | URL y clave publishable de Supabase |
+| `public/js/auth.js` | Login, verificación en dos pasos, recuperación, cierre por inactividad |
+| `public/js/data.js` · `scheduler.js` · `app.js` | Contenido del plan, cálculo del cronograma e interfaz |
+| `public/js/vendor/` | `@supabase/supabase-js` 2.117.2 servido localmente (sin CDN) con hash SRI |
 | `supabase/` | SQL: esquema y seguridad, datos iniciales, lista de miembros |
-| `scripts/generar-seed.js` | Regenera `supabase/02_seed.sql` desde `js/data.js` |
-| `vercel.json` | Cabeceras de seguridad HTTP |
+| `scripts/generar-seed.js` | Regenera `supabase/02_seed.sql` desde `public/js/data.js` |
 
 ## Puesta en marcha
 
@@ -35,17 +37,21 @@ En **SQL Editor**, ejecutar en orden:
 Los nombres de los menús pueden cambiar; ver https://supabase.com/docs/guides/auth.
 
 ### 3. Configurar la página
-En `js/config.js`, pegar la *Project URL* y la clave **publishable** (o *anon*) de **Project Settings → API**.
+En `public/js/config.js`, pegar la *Project URL* y la clave **publishable** (o *anon*) de **Project Settings → API**.
 Nunca la clave *secret* / *service_role*: la página se niega a arrancar si la detecta.
 
-### 4. Publicar
-Vercel (recomendado): importar el repo desde GitHub. `vercel.json` aplica CSP, HSTS, anti-clickjacking y demás cabeceras.
-GitHub Pages no permite cabeceras propias; la CSP va igual en `index.html`, pero sin protección contra iframes ni HSTS propio.
+### 4. Publicar (Cloudflare Pages)
+1. dash.cloudflare.com → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**.
+2. Autorizar la app de Cloudflare en la organización de GitHub y elegir `imperium-web`.
+3. Framework preset: **None** · Build command: vacío · Build output directory: `public`.
+4. Añadir la URL `*.pages.dev` (y el dominio propio, si se usa) en Supabase → Authentication → URL Configuration.
+
+`public/_headers` aplica CSP, HSTS, anti-clickjacking y demás cabeceras.
 
 ### Probar en local
 La página necesita servirse por HTTP (no abrir el archivo con doble clic):
 ```
-npx serve -l 3000 .
+npx serve -l 3000 public
 ```
 
 ## Modelo de seguridad

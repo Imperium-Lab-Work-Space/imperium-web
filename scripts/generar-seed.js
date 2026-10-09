@@ -1,14 +1,14 @@
-// Genera supabase/02_seed.sql a partir de js/data.js.
+// Genera supabase/02_seed.sql a partir de public/js/data.js.
 // Uso: node scripts/generar-seed.js   (volver a correrlo cuando cambien las tareas)
 const fs = require("fs");
 const path = require("path");
-const { L, PHASES, TASKS } = require("../js/data.js");
+const { L, PHASES, TASKS } = require("../public/js/data.js");
 
 const q = s => "'" + String(s).replace(/'/g, "''") + "'";
 const arr = a => "array[" + a.map(q).join(", ") + "]::text[]";
 
 const out = [];
-out.push("-- Generado por scripts/generar-seed.js desde js/data.js. No editar a mano.");
+out.push("-- Generado por scripts/generar-seed.js desde public/js/data.js. No editar a mano.");
 out.push("begin;", "");
 
 out.push("insert into public.fuentes (clave, titulo, url) values");
