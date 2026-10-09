@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src https://zvlyvjgbqswfmlqhkgim.supabase.co wss://zvlyvjgbqswfmlqhkgim.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Imperium Lab · Plan de arranque</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Carlito:ital,wght@0,400;0,700;1,400&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/auth.css">
+</head>
+<body>
+<div id="auth" class="auth">
+  <div class="auth-card">
+    <div class="auth-brand"><div class="mark" aria-hidden="true"></div><div><h1>Imperium Lab</h1><p>Plan de arranque · acceso privado</p></div></div>
+    <div class="auth-rule" aria-hidden="true"></div>
+
+    <p class="auth-msg" id="authMsg" role="alert" hidden></p>
+
+    <section data-screen="loading">
+      <p class="auth-muted">Verificando sesión…</p>
+    </section>
+
+    <section data-screen="config" hidden>
+      <h2>Falta configurar Supabase</h2>
+      <p class="auth-muted">Completa la URL del proyecto y la clave publishable en <code>js/config.js</code>. Nunca uses la clave secret o service_role en esta página.</p>
+    </section>
+
+    <form data-screen="login" hidden novalidate>
+      <h2>Iniciar sesión</h2>
+      <div class="field"><label for="loginEmail">Correo</label><input id="loginEmail" type="email" autocomplete="username" inputmode="email" maxlength="254" required></div>
+      <div class="field"><label for="loginPass">Contraseña</label>
+        <div class="pw"><input id="loginPass" type="password" autocomplete="current-password" maxlength="128" required><button type="button" class="btn sm ghost" data-reveal="loginPass" aria-label="Mostrar contraseña" aria-pressed="false">Ver</button></div>
+      </div>
+      <button class="btn primary auth-submit" type="submit">Continuar</button>
+      <button class="auth-link" type="button" data-go="forgot">¿Olvidaste tu contraseña?</button>
+    </form>
+
+    <form data-screen="enroll" hidden novalidate>
+      <h2>Activa la verificación en dos pasos</h2>
+      <p class="auth-muted">Es obligatoria. Escanea el código con una app autenticadora (Google Authenticator, Microsoft Authenticator, 1Password…) y escribe el código de 6 dígitos.</p>
+      <div class="qr"><img id="enrollQr" alt="Código QR para la app autenticadora" width="180" height="180"></div>
+      <details class="auth-secret"><summary>No puedo escanear el código</summary><p>Escribe esta clave en la app:</p><code id="enrollSecret" class="mono"></code></details>
+      <div class="field"><label for="enrollCode">Código de 6 dígitos</label><input id="enrollCode" class="otp mono" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></div>
+      <button class="btn primary auth-submit" type="submit">Activar y entrar</button>
+      <button class="auth-link" type="button" data-auth-act="signout">Cancelar y salir</button>
+    </form>
+
+    <form data-screen="verify" hidden novalidate>
+      <h2>Verificación en dos pasos</h2>
+      <p class="auth-muted">Abre tu app autenticadora y escribe el código de 6 dígitos de Imperium Lab.</p>
+      <div class="field"><label for="verifyCode">Código</label><input id="verifyCode" class="otp mono" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required></div>
+      <button class="btn primary auth-submit" type="submit">Verificar</button>
+      <button class="auth-link" type="button" data-auth-act="signout">Usar otra cuenta</button>
+    </form>
+
+    <form data-screen="forgot" hidden novalidate>
+      <h2>Recuperar contraseña</h2>
+      <p class="auth-muted">Te enviaremos un enlace. Ábrelo en este mismo navegador.</p>
+      <div class="field"><label for="forgotEmail">Correo</label><input id="forgotEmail" type="email" autocomplete="username" inputmode="email" maxlength="254" required></div>
+      <button class="btn primary auth-submit" type="submit">Enviar enlace</button>
+      <button class="auth-link" type="button" data-go="login">Volver</button>
+    </form>
+
+    <form data-screen="newpass" hidden novalidate>
+      <h2>Nueva contraseña</h2>
+      <p class="auth-muted">Mínimo 12 caracteres. Una frase larga es más segura que una palabra corta con símbolos.</p>
+      <div class="field"><label for="newPass">Contraseña nueva</label>
+        <div class="pw"><input id="newPass" type="password" autocomplete="new-password" maxlength="128" required><button type="button" class="btn sm ghost" data-reveal="newPass" aria-label="Mostrar contraseña" aria-pressed="false">Ver</button></div>
+        <div class="meter" aria-hidden="true"><i id="passMeter"></i></div><span class="hint" id="passHint"></span>
+      </div>
+      <div class="field"><label for="newPass2">Repite la contraseña</label><input id="newPass2" type="password" autocomplete="new-password" maxlength="128" required></div>
+      <button class="btn primary auth-submit" type="submit">Guardar contraseña</button>
+    </form>
+
+    <section data-screen="denied" hidden>
+      <h2>Sin acceso</h2>
+      <p class="auth-muted">Esta cuenta inició sesión, pero no está autorizada para ver el plan. Pide que la agreguen a la lista de miembros.</p>
+      <button class="btn auth-submit" type="button" data-auth-act="signout">Salir</button>
+    </section>
+  </div>
+  <p class="auth-foot">Conexión cifrada · verificación en dos pasos · la sesión se cierra tras inactividad</p>
+</div>
+
+<div id="app" hidden>
+<header class="top">
+  <div class="wrap top-in">
+    <div class="brand">
+      <div class="mark" aria-hidden="true"></div>
+      <div>
+        <h1>Imperium Lab · Plan de arranque</h1>
+        <p id="subtitle">Dos socias · 2 horas al día cada una</p>
+      </div>
+    </div>
+    <div class="top-actions">
+      <span class="saved" id="saved" aria-live="polite"></span>
+      <span class="chip who-chip" id="whoChip"></span>
+      <button class="btn sm" id="signOutBtn" type="button">Salir</button>
+      <button class="btn iconbtn" id="themeBtn" type="button" aria-label="Cambiar tema claro u oscuro" title="Tema"><svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17z" fill="currentColor"/></svg></button>
+    </div>
+  </div>
+  <div class="rule"></div>
+  <nav class="wrap tabs" role="tablist" aria-label="Vistas">
+    <button class="tab" role="tab" data-view="hoy">Hoy</button>
+    <button class="tab" role="tab" data-view="tablero">Tablero</button>
+    <button class="tab" role="tab" data-view="crono">Cronograma</button>
+    <button class="tab" role="tab" data-view="fases">Fases</button>
+    <button class="tab" role="tab" data-view="marca">Marca</button>
+    <button class="tab" role="tab" data-view="ajustes">Ajustes</button>
+  </nav>
+</header>
+
+<div class="wrap"><section class="summary" id="summary" aria-label="Resumen"></section></div>
+<main class="wrap" id="view"></main>
+<div id="drawerRoot"></div>
+<div id="toastRoot"></div>
+</div>
+
+<script src="js/vendor/supabase-2.117.2.js" integrity="sha384-Rj26LVGvoeRVR6+mwQmFfcR3QOBEwT+ZmuCWpuiqeTzJpCs0ER4ITAWGb4Hiy3Ok"></script>
+<script src="js/config.js"></script>
+<script src="js/auth.js"></script>
+<script src="js/data.js"></script>
+<script src="js/scheduler.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

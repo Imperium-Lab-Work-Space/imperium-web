@@ -1,0 +1,31 @@
+/* Pantalla de acceso: login, verificación en dos pasos y recuperación. Usa los tokens de styles.css. */
+[hidden]{display:none!important}
+.auth{min-height:100vh;min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:24px 16px}
+.auth-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:26px 24px}
+.auth-brand{display:flex;align-items:center;gap:12px}
+.auth-brand h1{font-size:20px;font-weight:800;line-height:1.1}
+.auth-brand p{margin:2px 0 0;color:var(--ink-3);font-size:13px}
+.auth-rule{height:2px;background:var(--mark);margin:18px 0 20px}
+.auth form,.auth section{display:grid;gap:14px}
+.auth h2{font-size:18px}
+.auth-muted{margin:0;color:var(--ink-2);font-size:14px}
+.auth code{font-family:var(--f-mono);font-size:12.5px;background:var(--surface-2);padding:1px 5px;border-radius:5px;word-break:break-all}
+.auth-submit{justify-content:center;padding:10px 14px;font-size:14.5px}
+.auth-submit[disabled]{opacity:.6;cursor:progress}
+.auth-link{background:none;border:0;padding:2px;color:var(--brand-text);font-size:13.5px;font-weight:600;cursor:pointer;justify-self:center;text-decoration:underline;text-underline-offset:3px}
+.auth-msg{margin:0 0 14px;padding:10px 12px;border-radius:var(--r-sm);font-size:13.5px;background:var(--crit-tint);color:var(--ink)}
+.auth-msg.ok{background:var(--good-tint)}
+.auth-foot{margin:0;color:var(--ink-3);font-size:12px;text-align:center}
+.pw{display:flex;gap:6px}
+.pw input{flex:1;min-width:0}
+.otp{letter-spacing:.4em;font-size:20px;text-align:center}
+.qr{display:flex;justify-content:center;background:#FFFFFF;border-radius:var(--r);padding:12px;border:1px solid var(--line)}
+.qr img{display:block;width:180px;height:180px}
+.auth-secret summary{cursor:pointer;font-size:13.5px;color:var(--brand-text);font-weight:600}
+.auth-secret p{margin:8px 0 4px;font-size:13px;color:var(--ink-2)}
+.meter{height:5px;border-radius:5px;background:var(--surface-3);overflow:hidden;margin-top:4px}
+.meter i{display:block;height:100%;width:0;background:var(--crit);transition:width .2s,background .2s}
+.meter i.mid{background:var(--warn)}
+.meter i.good{background:var(--good)}
+.who-chip:empty{display:none}
+@media (max-width:520px){.auth-card{padding:22px 18px}}
