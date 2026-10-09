@@ -1,0 +1,2 @@
+# La librería lleva hash SRI en index.html: Git no debe tocar sus saltos de línea.
+js/vendor/** -text
