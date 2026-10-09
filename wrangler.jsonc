@@ -1,0 +1,10 @@
+// Cloudflare Workers: sitio solo de archivos estáticos (sin código de servidor).
+// Solo se publica la carpeta public/; ahí está _headers con las cabeceras de seguridad.
+// "name" debe coincidir con el nombre del Worker creado en el panel de Cloudflare.
+{
+  "name": "imperium-web",
+  "compatibility_date": "2026-09-01",
+  "assets": {
+    "directory": "./public"
+  }
+}
